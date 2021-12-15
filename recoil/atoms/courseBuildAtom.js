@@ -9,10 +9,19 @@ export const courseBuildAtom = atom({
     author: '',
     sections: [
       {
-        sectionTitle: '',
+        sectionTitle: 'Introduction',
         lessons: [
           {
-            lessonTitle: '',
+            lessonTitle: 'Lesson 1',
+            lessonDescription: '',
+          },
+        ],
+      },
+      {
+        sectionTitle: 'Section 1',
+        lessons: [
+          {
+            lessonTitle: 'Lesson 2',
             lessonDescription: '',
           },
         ],

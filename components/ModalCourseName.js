@@ -1,19 +1,14 @@
-import Modal from '@material-tailwind/react/Modal';
-import ModalHeader from '@material-tailwind/react/ModalHeader';
-import ModalBody from '@material-tailwind/react/ModalBody';
-import ModalFooter from '@material-tailwind/react/ModalFooter';
-import Button from '@material-tailwind/react/Button';
 import { modalCourseNameAtom } from '../recoil/atoms/modalsAtom';
 import { useRecoilState } from 'recoil';
-import Input from '@material-tailwind/react/Input';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { Modal, ModalBody, ModalHeader, ModalFooter } from './Modal';
 
 function ModalCourseName() {
   const [showModal, setShowModal] = useRecoilState(modalCourseNameAtom);
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
 
   const toggleModal = (e) => {
-    e.preventDefault();
+    //e.preventDefault();
     let toggle = { ...showModal };
     toggle.isOpen = false;
     setShowModal(toggle);
@@ -31,18 +26,26 @@ function ModalCourseName() {
 
   return (
     <>
-      <Modal size="sm" active={showModal.isOpen} toggler={toggleModal}>
-        <ModalHeader toggler={toggleModal}>Course Name</ModalHeader>
+      <Modal isOpen={showModal.isOpen} toggle={toggleModal}>
+        <ModalHeader>Modal title</ModalHeader>
         <ModalBody>
-          <Input type="text" color="lightBlue" size="sm" outline={false} placeholder="Small Input" />
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat.
         </ModalBody>
         <ModalFooter>
-          <Button color="red" buttonType="link" onClick={toggleModal} ripple="dark">
+          <button
+            onClick={toggleModal}
+            className="text-white focus:outline-none m-1.5 rounded px-6 py-2 font-medium bg-red-500"
+          >
             Close
-          </Button>
-          <Button color="green" onClick={updateCourse} ripple="light">
-            Save Changes
-          </Button>
+          </button>
+          <button
+            onClick={updateCourse}
+            className="text-white focus:outline-none m-1.5 rounded px-6 py-2 font-medium bg-blue-600"
+          >
+            Confirm
+          </button>
         </ModalFooter>
       </Modal>
     </>

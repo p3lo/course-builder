@@ -1,9 +1,7 @@
 import Head from 'next/head';
-import Button from '@material-tailwind/react/Button';
 import { modalCourseNameAtom } from '../recoil/atoms/modalsAtom';
 import { useRecoilState } from 'recoil';
-import ModalCourseName from '../components/ModalCourseName';
-import Accordion from '../components/Accordion';
+import BuilderAccordion from '../components/BuilderAccordion';
 
 export default function Home() {
   const [showModal, setShowModal] = useRecoilState(modalCourseNameAtom);
@@ -24,13 +22,7 @@ export default function Home() {
       </Head>
 
       <div>
-        <Button color="lightBlue" type="button" onClick={toggleModal} ripple="light">
-          Open small Modal
-        </Button>
-        <ModalCourseName />
-      </div>
-      <div>
-        <Accordion />
+        <BuilderAccordion />
       </div>
     </div>
   );
