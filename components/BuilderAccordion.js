@@ -1,9 +1,8 @@
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { useRecoilValue } from 'recoil';
-import { Disclosure, Transition } from '@headlessui/react';
+import { Disclosure } from '@headlessui/react';
 
 import BuilderAccordionItem from './BuilderAccordionItem';
-import BuilderAccordionPanel from './BuilderAccordionPanel';
 
 function BuilderAccordion() {
   const courseInfo = useRecoilValue(courseBuildAtom);
@@ -16,7 +15,6 @@ function BuilderAccordion() {
             {({ open }) => (
               <>
                 <BuilderAccordionItem index={key} open={open} />
-                <BuilderAccordionPanel index={key} />
               </>
             )}
           </Disclosure>
