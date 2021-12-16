@@ -1,6 +1,7 @@
 import { useRecoilState } from 'recoil';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { AiOutlineEdit } from 'react-icons/ai';
+import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import produce from 'immer';
@@ -18,11 +19,28 @@ function BuilderAccordionPanelItem({ index, lessonIndex }) {
     setEditToggle(false);
   };
 
+  const deleteLesson = () => {
+    const lessons = produce(courseInfo, (draft) => {
+      draft.sections[index].lessons.splice(lessonIndex, 1);
+      draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
+    });
+    setCourseInfo(lessons);
+  };
+
   return (
     <div className="px-4 border">
       <div className="flex items-center justify-between ">
         <p className="py-1 ">{courseInfo.sections[index].lessons[lessonIndex].lessonTitle}</p>
-        <AiOutlineEdit className="w-4 h-4 cursor-pointer" onClick={() => setEditToggle(!editToggle)} />
+        <div className="flex space-x-2">
+          <AiOutlineEdit
+            className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-blue-800"
+            onClick={() => setEditToggle(!editToggle)}
+          />
+          <HiOutlineTrash
+            onClick={deleteLesson}
+            className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-red-600"
+          />
+        </div>
       </div>
 
       <Transition
@@ -36,12 +54,19 @@ function BuilderAccordionPanelItem({ index, lessonIndex }) {
       >
         <div className="w-full border-b border-gray-400" />
         <div className="flex flex-col my-2 space-y-2">
-          <input
-            className="w-full px-3 py-1 mx-auto border rounded-md outline-none sm:w-3/4 md:w-1/2 focus:border-blue-400 focus:shadow-sm focus:shadow-blue-200"
-            defaultValue={courseInfo.sections[index].lessons[lessonIndex].lessonTitle}
-            placeholder="Lesson title"
-            onChange={(e) => setLessonTitle(e.target.value)}
-          />
+          <div className="relative flex w-full mx-auto sm:w-3/4 md:w-1/2">
+            <input
+              className="flex-grow px-3 py-1 border outline-none rounded-l-md focus:border-blue-400 focus:shadow-sm focus:shadow-blue-200"
+              defaultValue={courseInfo.sections[index].lessons[lessonIndex].lessonTitle}
+              placeholder="Lesson title"
+              onChange={(e) => setLessonTitle(e.target.value)}
+              maxLength="40"
+              spellCheck="false"
+            />
+            <span className="flex items-center justify-center w-10 h-full py-1 font-bold text-gray-500 bg-gray-300 border rounded-r-md">
+              {40 - lessonTitle.length}
+            </span>
+          </div>
           <button onClick={updateLesson} className="w-40 p-2 mx-auto border border-gray-400 shadow-sm shadow-gray-300">
             Save lesson
           </button>
