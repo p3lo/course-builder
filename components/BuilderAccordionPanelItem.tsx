@@ -1,26 +1,26 @@
 import { useRecoilState } from 'recoil';
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { Course, courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import produce from 'immer';
 
-function BuilderAccordionPanelItem({ index, lessonIndex }) {
+const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }> = ({ index, lessonIndex }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
-  const [editToggle, setEditToggle] = useState(false);
-  const [lessonTitle, setLessonTitle] = useState(courseInfo.sections[index].lessons[lessonIndex].lessonTitle);
+  const [editToggle, setEditToggle] = useState<boolean>(false);
+  const [lessonTitle, setLessonTitle] = useState<string>(courseInfo.sections[index].lessons[lessonIndex].lessonTitle);
 
-  const updateLesson = () => {
-    const lesson = produce(courseInfo, (draft) => {
+  const updateLesson = (): void => {
+    const lesson = produce(courseInfo, (draft: Course) => {
       draft.sections[index].lessons[lessonIndex].lessonTitle = lessonTitle;
     });
     setCourseInfo(lesson);
     setEditToggle(false);
   };
 
-  const deleteLesson = () => {
-    const lessons = produce(courseInfo, (draft) => {
+  const deleteLesson = (): void => {
+    const lessons = produce(courseInfo, (draft: Course) => {
       draft.sections[index].lessons.splice(lessonIndex, 1);
       draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
     });
@@ -60,7 +60,7 @@ function BuilderAccordionPanelItem({ index, lessonIndex }) {
               defaultValue={courseInfo.sections[index].lessons[lessonIndex].lessonTitle}
               placeholder="Lesson title"
               onChange={(e) => setLessonTitle(e.target.value)}
-              maxLength="40"
+              maxLength={40}
               spellCheck="false"
             />
             <span className="flex items-center justify-center w-10 h-full py-1 font-bold text-gray-500 bg-gray-300 border rounded-r-md">
@@ -74,6 +74,6 @@ function BuilderAccordionPanelItem({ index, lessonIndex }) {
       </Transition>
     </div>
   );
-}
+};
 
 export default BuilderAccordionPanelItem;

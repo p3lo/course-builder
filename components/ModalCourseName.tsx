@@ -7,15 +7,13 @@ function ModalCourseName() {
   const [showModal, setShowModal] = useRecoilState(modalCourseNameAtom);
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
 
-  const toggleModal = (e) => {
-    //e.preventDefault();
+  const toggleModal = (): void => {
     let toggle = { ...showModal };
     toggle.isOpen = false;
     setShowModal(toggle);
   };
 
-  const updateCourse = (e) => {
-    e.preventDefault();
+  const updateCourse = (): void => {
     let course = { ...courseInfo };
     course.courseName = 'Prvy moj kokot';
     course.courseDescription = 'Description kokota';

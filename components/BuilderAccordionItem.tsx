@@ -1,4 +1,4 @@
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { courseBuildAtom, Course } from '../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
 import { Disclosure, Transition } from '@headlessui/react';
 import { HiChevronDown } from 'react-icons/hi';
@@ -9,28 +9,28 @@ import { HiOutlineTrash } from 'react-icons/hi';
 import produce from 'immer';
 import BuilderAccordionPanelItem from './BuilderAccordionPanelItem';
 
-function BuilderAccordionItem({ index, open }) {
-  const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
-  const [toggleCourseTitle, setToggleCourseTitle] = useState(false);
-  const [courseTitleInput, setCourseTitleInput] = useState('');
+const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ index, open }) => {
+  const [courseInfo, setCourseInfo] = useRecoilState<Course>(courseBuildAtom);
+  const [toggleCourseTitle, setToggleCourseTitle] = useState<boolean>(false);
+  const [courseTitleInput, setCourseTitleInput] = useState<string>('');
 
-  const updateSectionTitle = () => {
+  const updateSectionTitle = (): void => {
     setToggleCourseTitle(!toggleCourseTitle);
-    const title = produce(courseInfo, (draft) => {
+    const title = produce(courseInfo, (draft: Course) => {
       draft.sections[index].sectionTitle = courseTitleInput;
     });
     setCourseInfo(title);
   };
 
-  const deleteSection = () => {
-    const sections = produce(courseInfo, (draft) => {
+  const deleteSection = (): void => {
+    const sections = produce(courseInfo, (draft: Course) => {
       draft.sections.splice(index, 1);
     });
     setCourseInfo(sections);
   };
 
-  const addLesson = () => {
-    const lessons = produce(courseInfo, (draft) => {
+  const addLesson = (): void => {
+    const lessons = produce(courseInfo, (draft: Course) => {
       draft.sections[index].lessons.push({ lessonTitle: `Lesson ${draft.sections[index].lessons.length}` });
     });
     setCourseInfo(lessons);
@@ -72,7 +72,7 @@ function BuilderAccordionItem({ index, open }) {
               defaultValue={courseInfo.sections[index].sectionTitle}
               className="flex-grow px-5 py-2 text-black bg-gray-200 rounded-l-full outline-none"
               onChange={(e) => setCourseTitleInput(e.target.value)}
-              maxLength="120"
+              maxLength={120}
               spellCheck="false"
             />
             <div className="relative w-10 bg-gray-300 ">
@@ -121,6 +121,6 @@ function BuilderAccordionItem({ index, open }) {
       </div>
     </div>
   );
-}
+};
 
 export default BuilderAccordionItem;
