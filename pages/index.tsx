@@ -1,7 +1,36 @@
 import Head from 'next/head';
 import BuilderAccordion from '../components/BuilderAccordion';
+import axios from 'axios';
+import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { useRecoilState } from 'recoil';
+import { Course, CourseName } from '../types';
+import CourseBuilder from '../models/CourseBuilder';
+import dbConnect from '../lib/dbConnect';
+import { ObjectId } from 'mongoose';
 
-export default function Home() {
+const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
+  const [courseInfo, setCourseInfo] = useRecoilState<Course>(courseBuildAtom);
+  const addData = (): void => {
+    axios
+      .post('/api/courseBuilder', {
+        courseInfo,
+      })
+      .then((response) => {
+        console.log(response);
+      });
+  };
+  const deleteData = (): void => {
+    axios.delete('/api/courseBuilder').then((response) => console.log(response.status));
+  };
+  const loadData = (): void => {
+    axios.get('/api/courseBuilder').then((response) => console.log(response));
+  };
+  const deleteById = (id: ObjectId): void => {
+    axios.delete(`/api/courseBuilder/${id}`).then((response) => console.log(response));
+  };
+  const loadById = (id: ObjectId): void => {
+    axios.get(`/api/courseBuilder/${id}`).then((response) => setCourseInfo(response.data.data));
+  };
   return (
     <div className="w-full screen-h">
       <Head>
@@ -13,6 +42,42 @@ export default function Home() {
       <div>
         <BuilderAccordion />
       </div>
+      <div>
+        <button onClick={addData} className="p-3 border">
+          Add course
+        </button>
+        <button onClick={deleteData} className="p-3 border">
+          Delete course
+        </button>
+        <button onClick={loadData} className="p-3 border">
+          Load course
+        </button>
+      </div>
+      {courses.map((item, key) => (
+        <div className="flex space-x-2" key={key}>
+          <p>
+            {item.courseName} {item._id}
+          </p>
+          <button className="border" onClick={() => deleteById(item._id)}>
+            Delete
+          </button>
+          <button className="border" onClick={() => loadById(item._id)}>
+            Load
+          </button>
+        </div>
+      ))}
     </div>
   );
+};
+export default Home;
+
+export async function getStaticProps() {
+  await dbConnect();
+  const courses: CourseName[] = await CourseBuilder.find().select('_id courseName');
+  return {
+    props: {
+      courses: JSON.parse(JSON.stringify(courses)),
+    },
+    revalidate: 1,
+  };
 }
