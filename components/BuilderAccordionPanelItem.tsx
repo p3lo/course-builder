@@ -1,10 +1,11 @@
 import { useRecoilState } from 'recoil';
-import { Course, courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { AiOutlineEdit } from 'react-icons/ai';
 import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import produce from 'immer';
+import { Course } from '../types';
 
 const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }> = ({ index, lessonIndex }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);

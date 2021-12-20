@@ -16,7 +16,7 @@ function BuilderAccordion() {
 
   return (
     <div className="flex flex-col justify-center w-full">
-      {courseInfo.sections.map((_, key) => (
+      {courseInfo.sections.map((_, key: number) => (
         <div key={key}>
           <Disclosure>
             {({ open }) => (

@@ -1,22 +1,5 @@
 import { atom } from 'recoil';
-
-export interface Lesson {
-  lessonTitle: string;
-  lessonDescription?: string;
-}
-
-export interface Section {
-  sectionTitle: string;
-  lessons: Lesson[];
-}
-
-export interface Course {
-  courseName: string;
-  courseDescription: string;
-  isDraft?: boolean;
-  author?: string;
-  sections: Section[];
-}
+import { Course } from '../../types';
 
 export const courseBuildAtom = atom({
   key: 'courseBuildAtom',
