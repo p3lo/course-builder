@@ -6,6 +6,10 @@ const newCourse = new mongoose.Schema<Course>({
     type: String,
     required: true,
   },
+  slug: {
+    type: String,
+    required: true,
+  },
   courseDescription: String,
   isDraft: Boolean,
   author: String,

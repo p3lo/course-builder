@@ -5,6 +5,7 @@ export const courseBuildAtom = atom({
   key: 'courseBuildAtom',
   default: {
     courseName: 'First one',
+    slug: '',
     courseDescription: '',
     isDraft: false,
     author: 'Danko',
@@ -14,15 +15,6 @@ export const courseBuildAtom = atom({
         lessons: [
           {
             lessonTitle: 'Lesson 1',
-            lessonDescription: '',
-          },
-        ],
-      },
-      {
-        sectionTitle: 'Intro 2',
-        lessons: [
-          {
-            lessonTitle: 'Lesson 2',
             lessonDescription: '',
           },
         ],

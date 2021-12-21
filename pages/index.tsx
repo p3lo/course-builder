@@ -1,36 +1,50 @@
-import Head from 'next/head';
-import BuilderAccordion from '../components/BuilderAccordion';
 import axios from 'axios';
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
-import { useRecoilState } from 'recoil';
-import { Course, CourseName } from '../types';
-import CourseBuilder from '../models/CourseBuilder';
-import dbConnect from '../lib/dbConnect';
+import produce from 'immer';
 import { ObjectId } from 'mongoose';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useRecoilState } from 'recoil';
+import slugify from 'slugify';
+import dbConnect from '../lib/dbConnect';
+import CourseBuilder from '../models/CourseBuilder';
+import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { Course, CourseName } from '../types';
 
 const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
+  const [courseTitle, setCourseTitle] = useState<string>('');
   const [courseInfo, setCourseInfo] = useRecoilState<Course>(courseBuildAtom);
-  const addData = (): void => {
-    axios
-      .post('/api/courseBuilder', {
-        courseInfo,
-      })
-      .then((response) => {
-        console.log(response);
-      });
+  const router = useRouter();
+
+  const createCourse = () => {
+    if (!courseTitle) {
+      return;
+    }
+    const slug = slugify(courseTitle, { lower: true });
+    axios.get(`/api/courseBuilder/${slug}`).then((response) => {
+      if (response.data.course) {
+        setCourseInfo(response.data.course);
+      } else {
+        const setSlug = produce(courseInfo, (draft) => {
+          draft.slug = slug;
+          draft.courseName = courseTitle;
+        });
+        setCourseInfo(setSlug);
+      }
+      router.push('/builder/newCourse');
+    });
   };
-  const deleteData = (): void => {
-    axios.delete('/api/courseBuilder').then((response) => console.log(response.status));
+
+  const deleteBySlug = (slug: string): void => {
+    axios.delete(`/api/courseBuilder/${slug}`).then((response) => console.log(response));
   };
-  const loadData = (): void => {
-    axios.get('/api/courseBuilder').then((response) => console.log(response));
+  const loadBySlug = (slug: string): void => {
+    axios.get(`/api/courseBuilder/${slug}`).then((response) => {
+      setCourseInfo(response.data.course);
+    });
+    router.push('/builder/newCourse');
   };
-  const deleteById = (id: ObjectId): void => {
-    axios.delete(`/api/courseBuilder/${id}`).then((response) => console.log(response));
-  };
-  const loadById = (id: ObjectId): void => {
-    axios.get(`/api/courseBuilder/${id}`).then((response) => setCourseInfo(response.data.data));
-  };
+
   return (
     <div className="w-full screen-h">
       <Head>
@@ -40,32 +54,29 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
       </Head>
 
       <div>
-        <BuilderAccordion />
+        <input
+          type="text"
+          className="border outline-none p-3"
+          value={courseTitle}
+          onChange={(e) => setCourseTitle(e.target.value)}
+        />
+        <button className="p-3 border mb-3" onClick={createCourse}>
+          Create course
+        </button>
+        {courses.map((item, key) => (
+          <div className="flex space-x-2" key={key}>
+            <p>
+              {item.courseName} {item.slug}
+            </p>
+            <button className="border" onClick={() => deleteBySlug(item.slug)}>
+              Delete
+            </button>
+            <button className="border" onClick={() => loadBySlug(item.slug)}>
+              Load
+            </button>
+          </div>
+        ))}
       </div>
-      <div>
-        <button onClick={addData} className="p-3 border">
-          Add course
-        </button>
-        <button onClick={deleteData} className="p-3 border">
-          Delete course
-        </button>
-        <button onClick={loadData} className="p-3 border">
-          Load course
-        </button>
-      </div>
-      {courses.map((item, key) => (
-        <div className="flex space-x-2" key={key}>
-          <p>
-            {item.courseName} {item._id}
-          </p>
-          <button className="border" onClick={() => deleteById(item._id)}>
-            Delete
-          </button>
-          <button className="border" onClick={() => loadById(item._id)}>
-            Load
-          </button>
-        </div>
-      ))}
     </div>
   );
 };
@@ -73,7 +84,7 @@ export default Home;
 
 export async function getStaticProps() {
   await dbConnect();
-  const courses: CourseName[] = await CourseBuilder.find().select('_id courseName');
+  const courses: CourseName[] = await CourseBuilder.find().select('slug courseName');
   return {
     props: {
       courses: JSON.parse(JSON.stringify(courses)),

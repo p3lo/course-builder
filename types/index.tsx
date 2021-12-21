@@ -16,11 +16,10 @@ export interface Section {
 
 export interface CourseName {
   courseName: string;
-  _id: ObjectId;
+  slug: string;
 }
 
-export interface Course {
-  courseName: string;
+export interface Course extends CourseName {
   courseDescription: string;
   isDraft?: boolean;
   author?: string;
