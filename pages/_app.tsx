@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import { RecoilRoot } from 'recoil';
 import type { AppProps /*, AppContext */ } from 'next/app';
 import memoize from 'memoizee';
+import NextNProgress from 'nextjs-progressbar';
 
 function MyApp({ Component, pageProps }: AppProps) {
   const mutedConsole = memoize((console) => ({
@@ -11,6 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   global.console = mutedConsole(global.console);
   return (
     <RecoilRoot>
+      <NextNProgress />
       <Component {...pageProps} />
     </RecoilRoot>
   );

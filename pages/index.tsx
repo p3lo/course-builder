@@ -1,7 +1,7 @@
 import axios from 'axios';
 import produce from 'immer';
-import { ObjectId } from 'mongoose';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -13,6 +13,7 @@ import { Course, CourseName } from '../types';
 
 const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
   const [courseTitle, setCourseTitle] = useState<string>('');
+  const [pulledCourses, setPulledCourses] = useState<CourseName[]>(courses);
   const [courseInfo, setCourseInfo] = useRecoilState<Course>(courseBuildAtom);
   const router = useRouter();
 
@@ -21,28 +22,24 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
       return;
     }
     const slug = slugify(courseTitle, { lower: true });
-    axios.get(`/api/courseBuilder/${slug}`).then((response) => {
-      if (response.data.course) {
-        setCourseInfo(response.data.course);
-      } else {
-        const setSlug = produce(courseInfo, (draft) => {
-          draft.slug = slug;
-          draft.courseName = courseTitle;
-        });
-        setCourseInfo(setSlug);
-      }
-      router.push('/builder/newCourse');
+    const setSlug = produce(courseInfo, (draft) => {
+      draft.slug = slug;
+      draft.courseName = courseTitle;
     });
+    setCourseInfo(setSlug);
+    router.push(`/builder/${slug}`);
   };
 
   const deleteBySlug = (slug: string): void => {
-    axios.delete(`/api/courseBuilder/${slug}`).then((response) => console.log(response));
-  };
-  const loadBySlug = (slug: string): void => {
-    axios.get(`/api/courseBuilder/${slug}`).then((response) => {
-      setCourseInfo(response.data.course);
+    axios.delete(`/api/courseBuilder/${slug}`).then((response) => {
+      if (response.data.success) {
+        const index = pulledCourses.findIndex((item) => item.slug === slug);
+        const removeItem = produce(pulledCourses, (draft) => {
+          draft = draft.splice(index, 1);
+        });
+        setPulledCourses(removeItem);
+      }
     });
-    router.push('/builder/newCourse');
   };
 
   return (
@@ -56,14 +53,14 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
       <div>
         <input
           type="text"
-          className="border outline-none p-3"
+          className="p-3 border outline-none"
           value={courseTitle}
           onChange={(e) => setCourseTitle(e.target.value)}
         />
-        <button className="p-3 border mb-3" onClick={createCourse}>
+        <button className="p-3 mb-3 border" onClick={createCourse}>
           Create course
         </button>
-        {courses.map((item, key) => (
+        {pulledCourses.map((item, key) => (
           <div className="flex space-x-2" key={key}>
             <p>
               {item.courseName} {item.slug}
@@ -71,9 +68,9 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
             <button className="border" onClick={() => deleteBySlug(item.slug)}>
               Delete
             </button>
-            <button className="border" onClick={() => loadBySlug(item.slug)}>
-              Load
-            </button>
+            <Link href={`/builder/${item.slug}`}>
+              <a className="p-3 border">Edit course</a>
+            </Link>
           </div>
         ))}
       </div>

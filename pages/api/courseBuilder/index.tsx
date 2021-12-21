@@ -13,9 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   switch (method) {
     case 'POST':
       try {
-        console.log(req.body.courseInfo);
         const course: Course = await CourseBuilder.create(req.body.courseInfo);
-
         res.status(200).json({ success: true, data: course });
       } catch (err) {
         res.status(400).json({ success: false, err });

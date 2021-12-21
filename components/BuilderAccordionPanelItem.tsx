@@ -23,7 +23,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
   const deleteLesson = (): void => {
     const lessons = produce(courseInfo, (draft: Course) => {
       draft.sections[index].lessons.splice(lessonIndex, 1);
-      draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
+      // draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
     });
     setCourseInfo(lessons);
   };

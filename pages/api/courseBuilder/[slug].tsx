@@ -19,6 +19,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         res.status(400).json({ success: false, err });
       }
       break;
+    case 'PUT':
+      try {
+        console.log(slug, req.body.courseInfo);
+        const course: Course = await CourseBuilder.findOneAndReplace({ slug }, req.body.courseInfo);
+        res.status(200).json({ success: true, data: course });
+      } catch (err) {
+        res.status(400).json({ success: false, err });
+      }
+      break;
     case 'DELETE':
       try {
         await CourseBuilder.deleteOne({ slug });
