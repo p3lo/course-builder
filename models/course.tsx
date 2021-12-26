@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { Course } from '../types';
+import { CourseType } from '../types';
 
-const newCourse = new mongoose.Schema<Course>({
+const newCourse = new mongoose.Schema<CourseType>({
   courseName: {
     type: String,
     required: true,
@@ -12,7 +12,10 @@ const newCourse = new mongoose.Schema<Course>({
   },
   courseDescription: String,
   isDraft: Boolean,
-  author: String,
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  },
   sections: [
     {
       sectionTitle: {
@@ -32,5 +35,7 @@ const newCourse = new mongoose.Schema<Course>({
     },
   ],
 });
-
-export default mongoose.models.CourseBuilder || mongoose.model('CourseBuilder', newCourse);
+delete mongoose.connection.models['Course'];
+// export default mongoose.models.course || mongoose.model('Course', newCourse);
+const Course = mongoose.models.course || mongoose.model('Course', newCourse);
+export default Course;

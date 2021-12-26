@@ -19,9 +19,10 @@ export interface CourseName {
   slug: string;
 }
 
-export interface Course extends CourseName {
+export interface CourseType extends CourseName {
+  _id?: ObjectId;
   courseDescription: string;
   isDraft?: boolean;
-  author?: string;
+  author?: string | ObjectId;
   sections: Section[];
 }

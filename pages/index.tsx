@@ -3,19 +3,26 @@ import produce from 'immer';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import slugify from 'slugify';
 import dbConnect from '../lib/dbConnect';
-import CourseBuilder from '../models/CourseBuilder';
+import course from '../models/course';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
-import { Course, CourseName } from '../types';
+import { CourseType, CourseName } from '../types';
+import { useSession, signIn, signOut, getSession } from 'next-auth/react';
+import user from '../models/user';
 
 const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
   const [courseTitle, setCourseTitle] = useState<string>('');
   const [pulledCourses, setPulledCourses] = useState<CourseName[]>(courses);
-  const [courseInfo, setCourseInfo] = useRecoilState<Course>(courseBuildAtom);
+  const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
   const router = useRouter();
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    axios.get('/api/user/getId').then((message) => console.log(message));
+  }, []);
 
   const createCourse = () => {
     if (!courseTitle) {
@@ -51,6 +58,11 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
       </Head>
 
       <div>
+        {session ? (
+          <button onClick={() => signOut()}>Sign out</button>
+        ) : (
+          <button onClick={() => signIn()}>Sign in</button>
+        )}
         <input
           type="text"
           className="p-3 border outline-none"
@@ -79,13 +91,16 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
 };
 export default Home;
 
-export async function getStaticProps() {
+export async function getServerSideProps(context) {
+  // const sess = await getSession(context);
   await dbConnect();
-  const courses: CourseName[] = await CourseBuilder.find().select('slug courseName');
+  // const getId = await user.findOne({ email: sess.user.email });
+  // console.log(getId);
+
+  const courses: CourseName[] = await course.find().select('slug courseName');
   return {
     props: {
       courses: JSON.parse(JSON.stringify(courses)),
     },
-    revalidate: 1,
   };
 }

@@ -2,23 +2,22 @@ import BuilderAccordion from '../../components/BuilderAccordion';
 import axios from 'axios';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
-import { Course } from '../../types';
+import { CourseType } from '../../types';
 import { GetServerSideProps } from 'next';
 import dbConnect from '../../lib/dbConnect';
-import CourseBuilder from '../../models/CourseBuilder';
+import course from '../../models/course';
 import { useEffect } from 'react';
 import Link from 'next/link';
 
-const Builder: React.FC<{ course: Course }> = ({ course }) => {
-  const [courseInfo, setCourseInfo] = useRecoilState<Course>(courseBuildAtom);
+const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
+  const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
 
   useEffect(() => {
-    if (course) setCourseInfo(course);
-  }, [setCourseInfo, course]);
+    if (courses) setCourseInfo(courses);
+  }, [setCourseInfo, courses]);
 
   const saveData = (): void => {
-    console.log(courseInfo.slug);
-    if (course) {
+    if (courses) {
       axios.put(`/api/courseBuilder/${courseInfo.slug}`, { courseInfo }).then((response) => console.log(response));
     } else {
       axios
@@ -53,11 +52,11 @@ export default Builder;
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug = context.params.slug;
   await dbConnect();
-  const course: Course = await CourseBuilder.findOne({ slug }).select('-_id -__v -sections._id -sections.lessons._id');
+  const courses: CourseType = await course.findOne({ slug }).select('-_id -__v -sections._id -sections.lessons._id');
 
   return {
     props: {
-      course: JSON.parse(JSON.stringify(course)),
+      courses: JSON.parse(JSON.stringify(courses)),
     },
   };
 };

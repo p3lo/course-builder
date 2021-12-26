@@ -5,7 +5,7 @@ import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import produce from 'immer';
-import { Course } from '../types';
+import { CourseType } from '../types';
 
 const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }> = ({ index, lessonIndex }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
@@ -13,7 +13,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
   const [lessonTitle, setLessonTitle] = useState<string>(courseInfo.sections[index].lessons[lessonIndex].lessonTitle);
 
   const updateLesson = (): void => {
-    const lesson = produce(courseInfo, (draft: Course) => {
+    const lesson = produce(courseInfo, (draft: CourseType) => {
       draft.sections[index].lessons[lessonIndex].lessonTitle = lessonTitle;
     });
     setCourseInfo(lesson);
@@ -21,7 +21,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
   };
 
   const deleteLesson = (): void => {
-    const lessons = produce(courseInfo, (draft: Course) => {
+    const lessons = produce(courseInfo, (draft: CourseType) => {
       draft.sections[index].lessons.splice(lessonIndex, 1);
       // draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
     });
