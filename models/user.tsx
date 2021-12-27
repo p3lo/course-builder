@@ -5,6 +5,8 @@ const user = new mongoose.Schema({
   email: String,
   image: String,
   createdCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  watchedCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
 });
 
 delete mongoose.connection.models['User'];

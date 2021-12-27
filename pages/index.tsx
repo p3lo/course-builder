@@ -12,8 +12,10 @@ import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { CourseType, CourseName } from '../types';
 import { useSession, signIn, signOut, getSession } from 'next-auth/react';
 import user from '../models/user';
+import { getToken } from 'next-auth/jwt';
+import mongoose from 'mongoose';
 
-const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
+const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> = ({ courses, authoredCourses }) => {
   const [courseTitle, setCourseTitle] = useState<string>('');
   const [pulledCourses, setPulledCourses] = useState<CourseName[]>(courses);
   const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
@@ -21,7 +23,7 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
   const { data: session } = useSession();
 
   useEffect(() => {
-    axios.get('/api/user/getId').then((message) => console.log(message));
+    axios.get('/api/user/getId').then((message) => console.log());
   }, []);
 
   const createCourse = () => {
@@ -72,17 +74,36 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
         <button className="p-3 mb-3 border" onClick={createCourse}>
           Create course
         </button>
-        {pulledCourses.map((item, key) => (
+        <p className="mt-10">Authored Courses</p>
+        {authoredCourses.map((item, key) => (
           <div className="flex space-x-2" key={key}>
             <p>
               {item.courseName} {item.slug}
             </p>
-            <button className="border" onClick={() => deleteBySlug(item.slug)}>
+            <button className="p-3 border" onClick={() => deleteBySlug(item.slug)}>
               Delete
             </button>
             <Link href={`/builder/${item.slug}`}>
               <a className="p-3 border">Edit course</a>
             </Link>
+          </div>
+        ))}
+        <p className="mt-10">All Courses</p>
+        {pulledCourses.map((item, key) => (
+          <div className="flex space-x-2" key={key}>
+            <p>
+              {item.courseName} {item.slug}
+            </p>
+            {authoredCourses.filter((course) => course.slug === item.slug).length > 0 && (
+              <div className="flex space-x-2">
+                <button className="p-3 border" onClick={() => deleteBySlug(item.slug)}>
+                  Delete
+                </button>
+                <Link href={`/builder/${item.slug}`}>
+                  <a className="p-3 border">Edit course</a>
+                </Link>
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -91,16 +112,24 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
 };
 export default Home;
 
-export async function getServerSideProps(context) {
-  // const sess = await getSession(context);
+export async function getServerSideProps({ req }) {
+  const token = await getToken({ req, secret: process.env.JWT_SECRET });
   await dbConnect();
-  // const getId = await user.findOne({ email: sess.user.email });
-  // console.log(getId);
+  let authoredCourses: CourseName[] = [];
+  if (token) {
+    const createdCoursesIds = await user
+      .findOne({ _id: new mongoose.Types.ObjectId(token.sub) })
+      .select('createdCourses -_id');
+    authoredCourses = await course
+      .find({ _id: { $in: createdCoursesIds.createdCourses } })
+      .select('slug courseName -_id');
+  }
 
   const courses: CourseName[] = await course.find().select('slug courseName');
   return {
     props: {
       courses: JSON.parse(JSON.stringify(courses)),
+      authoredCourses: JSON.parse(JSON.stringify(authoredCourses)),
     },
   };
 }
