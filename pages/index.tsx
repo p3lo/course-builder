@@ -22,9 +22,9 @@ const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> =
   const router = useRouter();
   const { data: session } = useSession();
 
-  useEffect(() => {
-    axios.get('/api/user/getId').then((message) => console.log());
-  }, []);
+  // useEffect(() => {
+  //   axios.get('/api/user/getId').then((message) => console.log());
+  // }, []);
 
   const createCourse = () => {
     if (!courseTitle) {

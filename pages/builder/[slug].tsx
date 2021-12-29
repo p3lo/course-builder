@@ -9,6 +9,7 @@ import course from '../../models/course';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
+import { toast } from 'react-toastify';
 
 const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
@@ -18,6 +19,12 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
   }, [setCourseInfo, courses]);
 
   const saveData = (): void => {
+    const id = toast.loading('Please wait...', {
+      isLoading: true,
+      position: toast.POSITION.BOTTOM_CENTER,
+      theme: 'colored',
+      closeOnClick: true,
+    });
     if (courses) {
       axios.put(`/api/courseBuilder/${courseInfo.slug}`, { courseInfo }).then((response) => console.log(response));
     } else {
@@ -29,17 +36,27 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
           console.log(response);
         });
     }
+    toast.update(id, {
+      render: 'All is good',
+      type: 'success',
+      isLoading: false,
+      position: toast.POSITION.BOTTOM_CENTER,
+      autoClose: 4000,
+      theme: 'colored',
+      closeOnClick: true,
+    });
+    toast.clearWaitingQueue();
   };
 
   return (
     <div className="w-full screen-h">
       <h1 className="mx-auto my-3 text-2xl text-center">{courseInfo.courseName}</h1>
       <Tab.Group>
-        <Tab.List className="space-x-10 m-3 ">
+        <Tab.List className="m-3 space-x-10 ">
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-600'
                 : 'bg-white p-3 text-sm text-gray-600'
             }
           >
@@ -48,7 +65,7 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 text-sm font-bold text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 text-sm font-bold outline-none text-gray-600'
                 : 'bg-white p-3 text-sm text-gray-600'
             }
           >
@@ -57,7 +74,7 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-600'
                 : 'bg-white p-3 text-sm text-gray-600'
             }
           >
@@ -65,13 +82,13 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
           </Tab>
         </Tab.List>
         <Tab.Panels>
-          <Tab.Panel>
+          <Tab.Panel className="outline-none">
             <div>
               <BuilderAccordion />
             </div>
           </Tab.Panel>
-          <Tab.Panel>Content 2</Tab.Panel>
-          <Tab.Panel>Content 3</Tab.Panel>
+          <Tab.Panel className="outline-none">Content 2</Tab.Panel>
+          <Tab.Panel className="outline-none">Content 3</Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
       <div>
