@@ -24,5 +24,7 @@ export interface CourseType extends CourseName {
   courseDescription: string;
   isDraft?: boolean;
   author?: string | ObjectId;
+  category?: string | ObjectId;
+  subCategory?: string | ObjectId;
   sections: Section[];
 }

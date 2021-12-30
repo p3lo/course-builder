@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { toast } from 'react-toastify';
+import CourseDetails from '../../components/CourseDetails';
 
 const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
@@ -87,7 +88,9 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
               <BuilderAccordion />
             </div>
           </Tab.Panel>
-          <Tab.Panel className="outline-none">Content 2</Tab.Panel>
+          <Tab.Panel className="outline-none">
+            <CourseDetails />
+          </Tab.Panel>
           <Tab.Panel className="outline-none">Content 3</Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

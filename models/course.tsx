@@ -16,6 +16,14 @@ const newCourse = new mongoose.Schema<CourseType>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Category',
+  },
+  subCategory: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'SubCategory',
+  },
   sections: [
     {
       sectionTitle: {
