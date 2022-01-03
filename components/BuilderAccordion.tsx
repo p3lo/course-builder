@@ -16,7 +16,7 @@ function BuilderAccordion() {
 
   const addSection = () => {
     const section = produce(courseInfo, (draft) => {
-      draft.sections.push({ sectionTitle: `Section ${draft.sections.length}`, lessons: [{ lessonTitle: 'Lesson' }] });
+      draft.content.push({ section: `Section ${draft.content.length}`, lessons: [{ title: 'Lesson' }] });
     });
     setCourseInfo(section);
   };
@@ -31,10 +31,10 @@ function BuilderAccordion() {
     }
 
     const moveData = produce(courseInfo, (draft) => {
-      const getItem = courseInfo.sections[source.index];
+      const getItem = courseInfo.content[source.index];
 
-      draft.sections.splice(source.index, 1);
-      draft.sections.splice(destination.index, 0, getItem);
+      draft.content.splice(source.index, 1);
+      draft.content.splice(destination.index, 0, getItem);
     });
     setCourseInfo(moveData);
   };
@@ -47,7 +47,7 @@ function BuilderAccordion() {
             <Droppable droppableId={'1'}>
               {(provided) => (
                 <div ref={provided.innerRef} {...provided.droppableProps}>
-                  {courseInfo.sections.map((_, key: number) => (
+                  {courseInfo.content.map((_, key: number) => (
                     <div key={key}>
                       <Disclosure>
                         {({ open }) => (

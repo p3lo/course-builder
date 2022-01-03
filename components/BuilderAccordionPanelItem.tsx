@@ -5,24 +5,24 @@ import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import produce from 'immer';
-import { CourseType } from '../types';
+import { FullCourse } from '../types';
 
 const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }> = ({ index, lessonIndex }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
   const [editToggle, setEditToggle] = useState<boolean>(false);
-  const [lessonTitle, setLessonTitle] = useState<string>(courseInfo.sections[index].lessons[lessonIndex].lessonTitle);
+  const [lessonTitle, setLessonTitle] = useState<string>(courseInfo.content[index].lessons[lessonIndex].title);
 
   const updateLesson = (): void => {
-    const lesson = produce(courseInfo, (draft: CourseType) => {
-      draft.sections[index].lessons[lessonIndex].lessonTitle = lessonTitle;
+    const lesson = produce(courseInfo, (draft: FullCourse) => {
+      draft.content[index].lessons[lessonIndex].title = lessonTitle;
     });
     setCourseInfo(lesson);
     setEditToggle(false);
   };
 
   const deleteLesson = (): void => {
-    const lessons = produce(courseInfo, (draft: CourseType) => {
-      draft.sections[index].lessons.splice(lessonIndex, 1);
+    const lessons = produce(courseInfo, (draft: FullCourse) => {
+      draft.content[index].lessons.splice(lessonIndex, 1);
       // draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
     });
     setCourseInfo(lessons);
@@ -31,7 +31,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
   return (
     <div className="px-4 border">
       <div className="flex items-center justify-between ">
-        <p className="py-1 ">{courseInfo.sections[index].lessons[lessonIndex].lessonTitle}</p>
+        <p className="py-1 ">{courseInfo.content[index].lessons[lessonIndex].title}</p>
         <div className="flex space-x-2">
           <AiOutlineEdit
             className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-blue-800"
@@ -58,7 +58,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
           <div className="relative flex w-full mx-auto sm:w-3/4 md:w-1/2">
             <input
               className="flex-grow px-3 py-1 border outline-none rounded-l-md focus:border-blue-400 focus:shadow-sm focus:shadow-blue-200"
-              defaultValue={courseInfo.sections[index].lessons[lessonIndex].lessonTitle}
+              defaultValue={courseInfo.content[index].lessons[lessonIndex].title}
               placeholder="Lesson title"
               onChange={(e) => setLessonTitle(e.target.value)}
               maxLength={40}

@@ -1,30 +1,50 @@
-import { ObjectId } from 'mongoose';
-
 export interface Toggle {
   isOpen: boolean;
 }
 
+export interface Author {
+  id?: number;
+  username?: string;
+  avatar_url?: string;
+  website?: string;
+  role?: string;
+}
+
+export interface Category {
+  id?: number;
+  created_at?: Date;
+  name: string;
+}
+
+export interface Subcategory {
+  id?: number;
+  created_at?: Date;
+  name: string;
+  main_category: Category;
+}
+
 export interface Lesson {
-  lessonTitle: string;
-  lessonDescription?: string;
+  title: string;
+  description?: string;
 }
 
 export interface Section {
-  sectionTitle: string;
-  lessons: Lesson[];
+  section: string;
+  lessons?: Lesson[];
 }
 
 export interface CourseName {
-  courseName: string;
+  id?: number;
+  title: string;
   slug: string;
+  author: Author;
 }
 
-export interface CourseType extends CourseName {
-  _id?: ObjectId;
-  courseDescription: string;
+export interface FullCourse extends CourseName {
+  created_at?: Date;
+  description: string;
   isDraft?: boolean;
-  author?: string | ObjectId;
-  category?: string | ObjectId;
-  subCategory?: string | ObjectId;
-  sections: Section[];
+  subcategory: Subcategory;
+  image?: string;
+  content: Section[];
 }

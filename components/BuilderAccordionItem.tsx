@@ -9,32 +9,32 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { HiOutlineTrash } from 'react-icons/hi';
 import produce from 'immer';
 import BuilderAccordionPanelItem from './BuilderAccordionPanelItem';
-import { CourseType } from '../types';
+import { FullCourse } from '../types';
 import { Draggable } from 'react-beautiful-dnd';
 
 const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ index, open }) => {
-  const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
+  const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const [toggleCourseTitle, setToggleCourseTitle] = useState<boolean>(false);
   const [courseTitleInput, setCourseTitleInput] = useState<string>('');
 
   const updateSectionTitle = (): void => {
     setToggleCourseTitle(!toggleCourseTitle);
-    const title = produce(courseInfo, (draft: CourseType) => {
-      draft.sections[index].sectionTitle = courseTitleInput;
+    const title = produce(courseInfo, (draft: FullCourse) => {
+      draft.content[index].section = courseTitleInput;
     });
     setCourseInfo(title);
   };
 
   const deleteSection = (): void => {
-    const sections = produce(courseInfo, (draft: CourseType) => {
-      draft.sections.splice(index, 1);
+    const sections = produce(courseInfo, (draft: FullCourse) => {
+      draft.content.splice(index, 1);
     });
     setCourseInfo(sections);
   };
 
   const addLesson = (): void => {
-    const lessons = produce(courseInfo, (draft: CourseType) => {
-      draft.sections[index].lessons.push({ lessonTitle: `Lesson ${draft.sections[index].lessons.length}` });
+    const lessons = produce(courseInfo, (draft: FullCourse) => {
+      draft.content[index].lessons.push({ title: `Lesson ${draft.content[index].lessons.length}` });
     });
     setCourseInfo(lessons);
   };
@@ -45,14 +45,14 @@ const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ inde
           <div className="relative">
             <div className="flex items-center bg-black border-b hover:bg-gray-900">
               <Disclosure.Button className="flex justify-between w-full px-4 py-5 text-sm font-medium text-left text-white focus:outline-none">
-                <span>{courseInfo.sections[index].sectionTitle}</span>
+                <span>{courseInfo.content[index].section}</span>
                 <HiChevronDown className={`${open ? 'transform rotate-180' : ''} w-5 h-5`} />
               </Disclosure.Button>
               <div className="flex mx-3 space-x-2 text-white">
                 <AiOutlineEdit
                   onClick={() => {
                     setToggleCourseTitle(!toggleCourseTitle);
-                    setCourseTitleInput(courseInfo.sections[index].sectionTitle);
+                    setCourseTitleInput(courseInfo.content[index].section);
                   }}
                   className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-blue-200"
                 />
@@ -77,7 +77,7 @@ const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ inde
             >
               <div className="absolute flex w-3/4 top-2 left-2">
                 <input
-                  defaultValue={courseInfo.sections[index].sectionTitle}
+                  defaultValue={courseInfo.content[index].section}
                   className="flex-grow px-5 py-2 text-black bg-gray-200 rounded-l-full outline-none"
                   onChange={(e) => setCourseTitleInput(e.target.value)}
                   maxLength={120}
@@ -113,7 +113,7 @@ const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ inde
               leaveTo="transform scale-95 opacity-0"
             >
               <Disclosure.Panel className="px-4 py-2 space-y-1 text-sm text-gray-500">
-                {courseInfo.sections[index].lessons.map((_, key) => (
+                {courseInfo.content[index].lessons.map((_, key) => (
                   <BuilderAccordionPanelItem key={key} index={index} lessonIndex={key} />
                 ))}
                 <div className="flex justify-center w-full">

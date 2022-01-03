@@ -1,42 +1,51 @@
 import BuilderAccordion from '../../components/BuilderAccordion';
-import axios from 'axios';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
-import { CourseType } from '../../types';
+import { FullCourse } from '../../types';
 import { GetServerSideProps } from 'next';
-import dbConnect from '../../lib/dbConnect';
-import course from '../../models/course';
 import { useEffect } from 'react';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { toast } from 'react-toastify';
 import CourseDetails from '../../components/CourseDetails';
+import { supabase } from '../../lib/supabaseClient';
 
-const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
-  const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
-
+const Builder: React.FC<{ courses: FullCourse }> = ({ courses }) => {
+  const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
+  console.log(courseInfo);
   useEffect(() => {
     if (courses) setCourseInfo(courses);
   }, [setCourseInfo, courses]);
 
-  const saveData = (): void => {
+  const saveData = async () => {
     const id = toast.loading('Please wait...', {
       isLoading: true,
       position: toast.POSITION.BOTTOM_CENTER,
       theme: 'colored',
       closeOnClick: true,
     });
-    if (courses) {
-      axios.put(`/api/courseBuilder/${courseInfo.slug}`, { courseInfo }).then((response) => console.log(response));
-    } else {
-      axios
-        .post('/api/courseBuilder', {
-          courseInfo,
-        })
-        .then((response) => {
-          console.log(response);
-        });
-    }
+    const { data, error } = await supabase.from('courses').upsert({
+      id: courseInfo.id || null,
+      title: courseInfo.title,
+      slug: courseInfo.slug,
+      description: courseInfo.description,
+      image: courseInfo.image,
+      subcategory: courseInfo.subcategory.id,
+      author: courseInfo.author.id,
+      content: courseInfo.content,
+    });
+    console.log(data, error);
+    // if (courses) {
+    //   axios.put(`/api/courseBuilder/${courseInfo.slug}`, { courseInfo }).then((response) => console.log(response));
+    // } else {
+    //   axios
+    //     .post('/api/courseBuilder', {
+    //       courseInfo,
+    //     })
+    //     .then((response) => {
+    //       console.log(response);
+    //     });
+    // }
     toast.update(id, {
       render: 'All is good',
       type: 'success',
@@ -51,7 +60,7 @@ const Builder: React.FC<{ courses: CourseType }> = ({ courses }) => {
 
   return (
     <div className="w-full screen-h">
-      <h1 className="mx-auto my-3 text-2xl text-center">{courseInfo.courseName}</h1>
+      <h1 className="mx-auto my-3 text-2xl text-center">{courseInfo.title}</h1>
       <Tab.Group>
         <Tab.List className="m-3 space-x-10 ">
           <Tab
@@ -109,12 +118,19 @@ export default Builder;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug = context.params.slug;
-  await dbConnect();
-  const courses: CourseType = await course.findOne({ slug }).select('-_id -__v -sections._id -sections.lessons._id');
-
+  const { data, error } = await supabase
+    .from('courses')
+    .select(`*, author(*), subcategory(id, name, main_category(name))`)
+    .match({ slug });
+  console.log(data.length);
+  if (data.length === 0) {
+    return {
+      props: {},
+    };
+  }
   return {
     props: {
-      courses: JSON.parse(JSON.stringify(courses)),
+      courses: JSON.parse(JSON.stringify(data[0])),
     },
   };
 };

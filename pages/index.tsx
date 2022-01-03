@@ -6,25 +6,24 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import slugify from 'slugify';
-import dbConnect from '../lib/dbConnect';
-import course from '../models/course';
+import { supabase } from '../lib/supabaseClient';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
-import { CourseType, CourseName } from '../types';
-import { useSession, signIn, signOut, getSession } from 'next-auth/react';
-import user from '../models/user';
-import { getToken } from 'next-auth/jwt';
-import mongoose from 'mongoose';
+import { FullCourse, CourseName } from '../types';
 
-const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> = ({ courses, authoredCourses }) => {
+const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
   const [courseTitle, setCourseTitle] = useState<string>('');
   const [pulledCourses, setPulledCourses] = useState<CourseName[]>(courses);
-  const [courseInfo, setCourseInfo] = useRecoilState<CourseType>(courseBuildAtom);
+  const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const router = useRouter();
-  const { data: session } = useSession();
+  const [session, setSession] = useState(null);
 
-  // useEffect(() => {
-  //   axios.get('/api/user/getId').then((message) => console.log());
-  // }, []);
+  useEffect(() => {
+    setSession(supabase.auth.session());
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   const createCourse = () => {
     if (!courseTitle) {
@@ -33,22 +32,21 @@ const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> =
     const slug = slugify(courseTitle, { lower: true });
     const setSlug = produce(courseInfo, (draft) => {
       draft.slug = slug;
-      draft.courseName = courseTitle;
+      draft.title = courseTitle;
     });
     setCourseInfo(setSlug);
     router.push(`/builder/${slug}`);
   };
 
-  const deleteBySlug = (slug: string): void => {
-    axios.delete(`/api/courseBuilder/${slug}`).then((response) => {
-      if (response.data.success) {
-        const index = pulledCourses.findIndex((item) => item.slug === slug);
-        const removeItem = produce(pulledCourses, (draft) => {
-          draft = draft.splice(index, 1);
-        });
-        setPulledCourses(removeItem);
-      }
-    });
+  const deleteCourse = async (id: number) => {
+    const { data, error } = await supabase.from('courses').delete().match({ id });
+    if (!error) {
+      const index = pulledCourses.findIndex((item) => item.id === id);
+      const removeItem = produce(pulledCourses, (draft) => {
+        draft = draft.splice(index, 1);
+      });
+      setPulledCourses(removeItem);
+    }
   };
 
   return (
@@ -61,9 +59,16 @@ const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> =
 
       <div>
         {session ? (
-          <button onClick={() => signOut()}>Sign out</button>
+          <button
+            onClick={() => {
+              supabase.auth.signOut();
+              router.push('/');
+            }}
+          >
+            Sign out
+          </button>
         ) : (
-          <button onClick={() => signIn()}>Sign in</button>
+          <button onClick={() => router.push('/login')}>Sign in</button>
         )}
         <input
           type="text"
@@ -75,30 +80,33 @@ const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> =
           Create course
         </button>
         <p className="mt-10">Authored Courses</p>
-        {authoredCourses.map((item, key) => (
-          <div className="flex space-x-2" key={key}>
-            <p>
-              {item.courseName} {item.slug}
-            </p>
-            <button className="p-3 border" onClick={() => deleteBySlug(item.slug)}>
-              Delete
-            </button>
-            <Link href={`/builder/${item.slug}`}>
-              <a className="p-3 border">Edit course</a>
-            </Link>
-          </div>
-        ))}
+        {pulledCourses.map((item) =>
+          item.author.id === session?.user.id ? (
+            <div className="flex space-x-2" key={item.id}>
+              <p>
+                {item.title} {item.slug}
+              </p>
+              <button className="p-3 border" onClick={() => deleteCourse(item.id)}>
+                Delete
+              </button>
+              <Link href={`/builder/${item.slug}`}>
+                <a className="p-3 border">Edit course</a>
+              </Link>
+            </div>
+          ) : null
+        )}
         <p className="mt-10">All Courses</p>
-        {pulledCourses.map((item, key) => (
-          <div className="flex space-x-2" key={key}>
+        {pulledCourses.map((item) => (
+          <div className="flex space-x-2" key={item.id}>
             <p>
-              {item.courseName} {item.slug}
+              {item.title} {item.slug}
             </p>
-            {authoredCourses.filter((course) => course.slug === item.slug).length > 0 && (
+            {item.author.id === session?.user.id && (
               <div className="flex space-x-2">
-                <button className="p-3 border" onClick={() => deleteBySlug(item.slug)}>
+                <button className="p-3 border" onClick={() => deleteCourse(item.id)}>
                   Delete
                 </button>
+
                 <Link href={`/builder/${item.slug}`}>
                   <a className="p-3 border">Edit course</a>
                 </Link>
@@ -113,23 +121,14 @@ const Home: React.FC<{ courses: CourseName[]; authoredCourses: CourseName[] }> =
 export default Home;
 
 export async function getServerSideProps({ req }) {
-  const token = await getToken({ req, secret: process.env.JWT_SECRET });
-  await dbConnect();
-  let authoredCourses: CourseName[] = [];
-  if (token) {
-    const createdCoursesIds = await user
-      .findOne({ _id: new mongoose.Types.ObjectId(token.sub) })
-      .select('createdCourses -_id');
-    authoredCourses = await course
-      .find({ _id: { $in: createdCoursesIds.createdCourses } })
-      .select('slug courseName -_id');
-  }
+  const { user } = await supabase.auth.api.getUserByCookie(req);
 
-  const courses: CourseName[] = await course.find().select('slug courseName');
+  const { data, error } = await supabase.from('courses').select(`*, author(*), subcategory(name, main_category(name))`);
+  // console.log(JSON.stringify(data[0], null, 2), error);
+  // console.log(data);
   return {
     props: {
-      courses: JSON.parse(JSON.stringify(courses)),
-      authoredCourses: JSON.parse(JSON.stringify(authoredCourses)),
+      courses: JSON.parse(JSON.stringify(data)),
     },
   };
 }

@@ -1,24 +1,27 @@
 import { atom } from 'recoil';
-import { Course } from '../../types';
+import { FullCourse } from '../../types';
 
 export const courseBuildAtom = atom({
   key: 'courseBuildAtom',
   default: {
-    courseName: 'First one',
+    title: 'First one',
     slug: '',
-    courseDescription: '',
+    description: '',
     isDraft: false,
-    author: 'Danko',
-    sections: [
+    author: { username: 'Danko' },
+    subcategory: {
+      id: 2,
+    },
+    content: [
       {
-        sectionTitle: 'Introduction',
+        section: 'Introduction',
         lessons: [
           {
-            lessonTitle: 'Lesson 1',
-            lessonDescription: '',
+            title: 'Lesson 1',
+            description: '',
           },
         ],
       },
     ],
-  } as Course,
+  } as FullCourse,
 });
