@@ -14,13 +14,14 @@ export interface Category {
   id?: number;
   created_at?: Date;
   name: string;
+  subcategories?: Subcategory[];
 }
 
 export interface Subcategory {
   id?: number;
   created_at?: Date;
   name: string;
-  main_category: Category;
+  main_category?: Category;
 }
 
 export interface Lesson {

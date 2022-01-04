@@ -1,7 +1,7 @@
 import BuilderAccordion from '../../components/BuilderAccordion';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
-import { FullCourse } from '../../types';
+import { Category, FullCourse } from '../../types';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -11,19 +11,19 @@ import CourseDetails from '../../components/CourseDetails';
 import { supabase } from '../../lib/supabaseClient';
 import { useRouter } from 'next/router';
 
-const Builder: React.FC<{ courses: FullCourse }> = ({ courses }) => {
+const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ courses, categories }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const [session, setSession] = useState(null);
   const router = useRouter();
 
-  console.log(courseInfo);
+  console.log(categories);
   useEffect(() => {
     if (courses) {
       setCourseInfo(courses);
     }
-    if (courseInfo.title === '') {
-      router.push('/');
-    }
+    // if (courseInfo.title === '') {
+    //   router.push('/');
+    // }
     setSession(supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
@@ -113,7 +113,7 @@ const Builder: React.FC<{ courses: FullCourse }> = ({ courses }) => {
             </div>
           </Tab.Panel>
           <Tab.Panel className="outline-none">
-            <CourseDetails />
+            <CourseDetails categories={categories} />
           </Tab.Panel>
           <Tab.Panel className="outline-none">Content 3</Tab.Panel>
         </Tab.Panels>
@@ -133,18 +133,22 @@ export default Builder;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug = context.params.slug;
-  const { data, error } = await supabase
+  const { data: course } = await supabase
     .from('courses')
     .select(`*, author(*), subcategory(id, name, main_category(name))`)
     .match({ slug });
-  if (data.length === 0) {
+  const { data: categories } = await supabase.from('categories').select('id,name, subcategories!inner(id, name)');
+  if (course.length === 0) {
     return {
-      props: {},
+      props: {
+        categories: JSON.parse(JSON.stringify(categories)),
+      },
     };
   }
   return {
     props: {
-      courses: JSON.parse(JSON.stringify(data[0])),
+      courses: JSON.parse(JSON.stringify(course[0])),
+      categories: JSON.parse(JSON.stringify(categories)),
     },
   };
 };
