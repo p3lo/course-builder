@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import slugify from 'slugify';
 import { supabase } from '../lib/supabaseClient';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
@@ -16,19 +16,21 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const router = useRouter();
   const [session, setSession] = useState(null);
+  const resetList = useResetRecoilState(courseBuildAtom);
 
   useEffect(() => {
     setSession(supabase.auth.session());
-
+    resetList();
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
-  }, []);
+  }, [resetList]);
 
   const createCourse = () => {
     if (!courseTitle) {
       return;
     }
+
     const slug = slugify(courseTitle, { lower: true });
     const setSlug = produce(courseInfo, (draft) => {
       draft.slug = slug;
@@ -40,6 +42,7 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
 
   const deleteCourse = async (id: number) => {
     const { data, error } = await supabase.from('courses').delete().match({ id });
+    console.log(data, error);
     if (!error) {
       const index = pulledCourses.findIndex((item) => item.id === id);
       const removeItem = produce(pulledCourses, (draft) => {

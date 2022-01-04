@@ -4,11 +4,11 @@ import { FullCourse } from '../../types';
 export const courseBuildAtom = atom({
   key: 'courseBuildAtom',
   default: {
-    title: 'First one',
+    title: '',
     slug: '',
     description: '',
     isDraft: false,
-    author: { username: 'Danko' },
+    author: { id: '' },
     subcategory: {
       id: 2,
     },

@@ -3,19 +3,32 @@ import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
 import { FullCourse } from '../../types';
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { toast } from 'react-toastify';
 import CourseDetails from '../../components/CourseDetails';
 import { supabase } from '../../lib/supabaseClient';
+import { useRouter } from 'next/router';
 
 const Builder: React.FC<{ courses: FullCourse }> = ({ courses }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
+  const [session, setSession] = useState(null);
+  const router = useRouter();
+
   console.log(courseInfo);
   useEffect(() => {
-    if (courses) setCourseInfo(courses);
-  }, [setCourseInfo, courses]);
+    if (courses) {
+      setCourseInfo(courses);
+    }
+    if (courseInfo.title === '') {
+      router.push('/');
+    }
+    setSession(supabase.auth.session());
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, [setCourseInfo, courses, router, courseInfo.title]);
 
   const saveData = async () => {
     const id = toast.loading('Please wait...', {
@@ -24,28 +37,30 @@ const Builder: React.FC<{ courses: FullCourse }> = ({ courses }) => {
       theme: 'colored',
       closeOnClick: true,
     });
-    const { data, error } = await supabase.from('courses').upsert({
-      id: courseInfo.id || null,
-      title: courseInfo.title,
-      slug: courseInfo.slug,
-      description: courseInfo.description,
-      image: courseInfo.image,
-      subcategory: courseInfo.subcategory.id,
-      author: courseInfo.author.id,
-      content: courseInfo.content,
-    });
-    console.log(data, error);
-    // if (courses) {
-    //   axios.put(`/api/courseBuilder/${courseInfo.slug}`, { courseInfo }).then((response) => console.log(response));
-    // } else {
-    //   axios
-    //     .post('/api/courseBuilder', {
-    //       courseInfo,
-    //     })
-    //     .then((response) => {
-    //       console.log(response);
-    //     });
-    // }
+    if (courseInfo.id) {
+      const { data, error } = await supabase.from('courses').upsert({
+        id: courseInfo.id,
+        title: courseInfo.title,
+        slug: courseInfo.slug,
+        description: courseInfo.description,
+        image: courseInfo.image,
+        subcategory: courseInfo.subcategory.id,
+        author: courseInfo.author.id,
+        content: courseInfo.content,
+      });
+      console.log(data, error);
+    } else {
+      const { data, error } = await supabase.from('courses').upsert({
+        title: courseInfo.title,
+        slug: courseInfo.slug,
+        description: courseInfo.description,
+        image: courseInfo.image,
+        subcategory: courseInfo.subcategory.id,
+        author: session.user.id,
+        content: courseInfo.content,
+      });
+      console.log(data, error);
+    }
     toast.update(id, {
       render: 'All is good',
       type: 'success',
@@ -122,7 +137,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .from('courses')
     .select(`*, author(*), subcategory(id, name, main_category(name))`)
     .match({ slug });
-  console.log(data.length);
   if (data.length === 0) {
     return {
       props: {},

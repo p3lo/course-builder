@@ -3,7 +3,7 @@ export interface Toggle {
 }
 
 export interface Author {
-  id?: number;
+  id?: string;
   username?: string;
   avatar_url?: string;
   website?: string;
