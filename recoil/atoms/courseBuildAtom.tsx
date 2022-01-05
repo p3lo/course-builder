@@ -6,11 +6,12 @@ export const courseBuildAtom = atom({
   default: {
     title: '',
     slug: '',
-    description: '',
+    description: '<p></p>',
     isDraft: false,
     author: { id: '' },
     subcategory: {
       id: 2,
+      main_category: { id: 2 },
     },
     content: [
       {

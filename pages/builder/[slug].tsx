@@ -16,7 +16,6 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
   const [session, setSession] = useState(null);
   const router = useRouter();
 
-  console.log(categories);
   useEffect(() => {
     if (courses) {
       setCourseInfo(courses);
@@ -28,7 +27,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
-  }, [setCourseInfo, courses, router, courseInfo.title]);
+  }, [setCourseInfo, courses, router]);
 
   const saveData = async () => {
     const id = toast.loading('Please wait...', {
@@ -135,7 +134,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const slug = context.params.slug;
   const { data: course } = await supabase
     .from('courses')
-    .select(`*, author(*), subcategory(id, name, main_category(name))`)
+    .select(`*, author(*), subcategory(id, main_category(id))`)
     .match({ slug });
   const { data: categories } = await supabase.from('categories').select('id,name, subcategories!inner(id, name)');
   if (course.length === 0) {

@@ -10,6 +10,11 @@ export interface Author {
   role?: string;
 }
 
+export interface CategoryIndex {
+  catIndex: number;
+  subcatIndex: number;
+}
+
 export interface Category {
   id?: number;
   created_at?: Date;
