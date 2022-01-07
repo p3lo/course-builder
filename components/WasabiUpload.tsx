@@ -13,13 +13,35 @@ import produce from 'immer';
 
 const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> = ({ type, uppyId, path }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
-  const [uppyInfo, setUppyInfo] = useState<string>('Upload file (max 300MB)');
+  const [uppyInfo, setUppyInfo] = useState<string>(() => {
+    if (uppyId === 'details_image') {
+      return '3';
+    } else if (uppyId === 'details_video') {
+      return '30';
+    } else {
+      return '300';
+    }
+  });
+  const [uploadComplete, setUploadComplete] = useState<string>(() => {
+    if (uppyId === 'details_image') {
+      return courseInfo.image;
+    } else if (uppyId === 'details_video') {
+      return courseInfo.preview;
+    }
+  });
   const [url, setUrl] = useState<string>(courseInfo.image);
 
   useEffect(() => {
-    const updateUrl = produce(courseInfo, (draft) => {
-      draft.image = url;
-    });
+    let updateUrl: FullCourse;
+    if (uppyId === 'details_image') {
+      updateUrl = produce(courseInfo, (draft) => {
+        draft.image = url;
+      });
+    } else if (uppyId === 'details_video') {
+      updateUrl = produce(courseInfo, (draft) => {
+        draft.preview = url;
+      });
+    }
     setCourseInfo(updateUrl);
   }, [url]);
 
@@ -27,7 +49,7 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
     id: uppyId,
     autoProceed: true,
     restrictions: {
-      maxFileSize: 314572800,
+      maxFileSize: +uppyInfo * 1024 * 1024,
       maxNumberOfFiles: 1,
       minNumberOfFiles: null,
       allowedFileTypes: type,
@@ -53,15 +75,22 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       if (result.successful) {
         // updateMedia('upload', result.successful[0].uploadURL);
         setUrl(result.successful[0].uploadURL);
-        setUppyInfo(`Upload complete! File: ${result.successful[0].name}`);
+        setUploadComplete(`Upload complete! File: ${result.successful[0].name}`);
       } else {
-        setUppyInfo(`Upload error: ${result.failed}`);
+        setUploadComplete(`Upload error: ${result.failed}`);
       }
       uppy.close();
     });
   return (
-    <div className="flex flex-col items-center justify-center my-5">
-      <p>{uppyInfo}</p>
+    <div className="flex flex-col items-center justify-center my-5 space-y-2">
+      <p>Upload file max ({uppyInfo} MB)</p>
+      {uploadComplete && (
+        <div className="flex flex-col items-center">
+          <p className="font-bold"> Filename: </p>
+          <p className="text-center">{uploadComplete}</p>
+        </div>
+      )}
+
       <FileInput uppy={uppy} pretty />
       <div className="w-full">
         <StatusBar uppy={uppy} hideUploadButton showProgressDetails />

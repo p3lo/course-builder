@@ -52,5 +52,6 @@ export interface FullCourse extends CourseName {
   isDraft?: boolean;
   subcategory: Subcategory;
   image?: string;
+  preview?: string;
   content: Section[];
 }

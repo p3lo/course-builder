@@ -9,6 +9,8 @@ export const courseBuildAtom = atom({
     description: '<p></p>',
     isDraft: false,
     author: { id: '' },
+    image: '',
+    preview: '',
     subcategory: {
       id: 2,
       main_category: { id: 2 },

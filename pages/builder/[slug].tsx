@@ -27,7 +27,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
-  }, [setCourseInfo, courses, router]);
+  }, []);
 
   const saveData = async () => {
     const id = toast.loading('Please wait...', {
@@ -43,6 +43,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
         slug: courseInfo.slug,
         description: courseInfo.description,
         image: courseInfo.image,
+        preview: courseInfo.preview,
         subcategory: courseInfo.subcategory.id,
         author: courseInfo.author.id,
         content: courseInfo.content,
@@ -54,6 +55,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
         slug: courseInfo.slug,
         description: courseInfo.description,
         image: courseInfo.image,
+        preview: courseInfo.preview,
         subcategory: courseInfo.subcategory.id,
         author: session.user.id,
         content: courseInfo.content,
