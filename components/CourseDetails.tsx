@@ -1,9 +1,12 @@
+import axios from 'axios';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { Category, CategoryIndex, FullCourse } from '../types';
 import RichTextEditor from './rte/RichTextEditor';
 import Categories from './select/Categories';
+import WasabiUpload from './WasabiUpload';
 
 const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => {
   const courseInfo = useRecoilValue<FullCourse>(courseBuildAtom);
@@ -18,17 +21,23 @@ const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => 
   }, []);
 
   return (
-    <div className="flex flex-col m-5 space-y-3 text-sm">
+    <div className="relative flex flex-col space-y-3 text-sm">
       <div className="">
         <Categories categories={categories} catIndex={categoryIndex} />
       </div>
       <div className="flex flex-col">
         <label className="mx-3 text-xs">Description</label>
-        <input type="text" className="p-2 border outline-none"></input>
+        <RichTextEditor />
       </div>
       <div className="flex flex-col">
-        <label className="mx-3 text-xs">Description</label>
-        <RichTextEditor />
+        <label className="mx-3 text-xs">Preview Image</label>
+        <div className="grid items-center justify-center grid-cols-2 border">
+          <WasabiUpload type={['video/*', 'image/*']} uppyId="details_image" path={`${courseInfo.slug}/details/`} />
+
+          {courseInfo.image && (
+            <Image src={courseInfo.image} alt="details" width={200} height={200} objectFit="scale-down" />
+          )}
+        </div>
       </div>
     </div>
   );

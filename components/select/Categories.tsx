@@ -41,7 +41,7 @@ const Categories: React.FC<{ categories: Category[]; catIndex: CategoryIndex }> 
   }, [index]);
 
   return (
-    <div className="flex space-x-5">
+    <div className="flex flex-col space-y-3 sm:space-y-0 sm:space-x-5 sm:flex-row">
       <div className="flex flex-col">
         <label className="mx-3 text-xs">Category</label>
         <div className="w-72">

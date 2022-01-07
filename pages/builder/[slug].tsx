@@ -73,7 +73,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
   };
 
   return (
-    <div className="w-full screen-h">
+    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] screen-h">
       <h1 className="mx-auto my-3 text-2xl text-center">{courseInfo.title}</h1>
       <Tab.Group>
         <Tab.List className="m-3 space-x-10 ">
