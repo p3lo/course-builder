@@ -5,6 +5,7 @@ import produce from 'immer';
 import BuilderAccordionItem from './BuilderAccordionItem';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
+import VideoPreviewModal from './VideoPreviewModal';
 
 function BuilderAccordion() {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
@@ -73,6 +74,7 @@ function BuilderAccordion() {
           Add section
         </button>
       </div>
+      <VideoPreviewModal />
     </div>
   );
 }

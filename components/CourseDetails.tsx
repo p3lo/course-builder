@@ -6,6 +6,7 @@ import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { Category, CategoryIndex, FullCourse } from '../types';
 import RichTextEditor from './rte/RichTextEditor';
 import Categories from './select/Categories';
+import VideoPlayer from './VideoPlayer';
 import WasabiUpload from './WasabiUpload';
 
 const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => {
@@ -46,8 +47,10 @@ const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => 
         <div className="grid items-center justify-center grid-cols-1 border sm:grid-cols-2">
           <WasabiUpload type={['video/*']} uppyId="details_video" path={`${courseInfo.slug}/details/`} />
           <div className="flex items-center justify-center my-2">
-            {courseInfo.image && (
-              <Image src={courseInfo.image} alt="details" width={200} height={200} objectFit="scale-down" />
+            {courseInfo.preview && (
+              <div className="h-[250px] w-[450px]">
+                <VideoPlayer videoUrl={courseInfo.preview} videoTitle={courseInfo.title} />
+              </div>
             )}
           </div>
         </div>

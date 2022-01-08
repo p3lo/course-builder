@@ -22,17 +22,30 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       return '300';
     }
   });
+  console.log(courseInfo);
   const [uploadComplete, setUploadComplete] = useState<string>(() => {
     if (uppyId === 'details_image') {
       return courseInfo.image;
     } else if (uppyId === 'details_video') {
       return courseInfo.preview;
+    } else {
+      const indexes = uppyId.split('-');
+      return courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url;
     }
   });
-  const [url, setUrl] = useState<string>(courseInfo.image);
+  const [url, setUrl] = useState<string>(() => {
+    if (uppyId === 'details_image') {
+      return courseInfo.image;
+    } else if (uppyId === 'details_video') {
+      return courseInfo.preview;
+    } else {
+      const indexes = uppyId.split('-');
+      return courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url;
+    }
+  });
 
   useEffect(() => {
-    let updateUrl: FullCourse;
+    let updateUrl: FullCourse = courseInfo;
     if (uppyId === 'details_image') {
       updateUrl = produce(courseInfo, (draft) => {
         draft.image = url;
@@ -40,6 +53,11 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
     } else if (uppyId === 'details_video') {
       updateUrl = produce(courseInfo, (draft) => {
         draft.preview = url;
+      });
+    } else {
+      const indexes = uppyId.split('-');
+      updateUrl = produce(courseInfo, (draft) => {
+        draft.content[+indexes[0]].lessons[+indexes[1]].content_url = url;
       });
     }
     setCourseInfo(updateUrl);
@@ -54,38 +72,38 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       minNumberOfFiles: null,
       allowedFileTypes: type,
     },
-  })
-    .use(AwsS3, {
-      //@ts-ignore
-      async getUploadParameters(file) {
-        return axios
-          .post(`/api/builder/wasabi-presigned-url?file=${file.name}`, {
-            path,
-          })
-          .then((response) => {
-            return {
-              method: 'PUT',
-              url: response.data.url,
-              fields: [],
-            };
-          });
-      },
-    })
-    .on('complete', (result) => {
-      if (result.successful) {
-        // updateMedia('upload', result.successful[0].uploadURL);
-        setUrl(result.successful[0].uploadURL);
-        setUploadComplete(`Upload complete! File: ${result.successful[0].name}`);
-      } else {
-        setUploadComplete(`Upload error: ${result.failed}`);
-      }
-      uppy.close();
-    });
+  });
+  uppy.use(AwsS3, {
+    //@ts-ignore
+    async getUploadParameters(file) {
+      return axios
+        .post(`/api/builder/wasabi-presigned-url?file=${file.name}`, {
+          path,
+        })
+        .then((response) => {
+          return {
+            method: 'PUT',
+            url: response.data.url,
+            fields: [],
+          };
+        });
+    },
+  });
+  uppy.on('complete', (result) => {
+    if (result.successful) {
+      // updateMedia('upload', result.successful[0].uploadURL);
+      setUrl(result.successful[0].uploadURL);
+      setUploadComplete(`Upload complete! File: ${result.successful[0].name}`);
+    } else {
+      setUploadComplete(`Upload error: ${result.failed}`);
+    }
+    uppy.close();
+  });
   return (
     <div className="flex flex-col items-center justify-center my-5 space-y-2">
       <p>Upload file max ({uppyInfo} MB)</p>
       {uploadComplete && (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center text-xs">
           <p className="font-bold"> Filename: </p>
           <p className="text-center">{uploadComplete}</p>
         </div>

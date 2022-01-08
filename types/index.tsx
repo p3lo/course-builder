@@ -2,6 +2,11 @@ export interface Toggle {
   isOpen: boolean;
 }
 
+export interface ToggleWithVideo extends Toggle {
+  url?: string;
+  title?: string;
+}
+
 export interface Author {
   id?: string;
   username?: string;
@@ -32,6 +37,7 @@ export interface Subcategory {
 export interface Lesson {
   title: string;
   description?: string;
+  content_url?: string;
 }
 
 export interface Section {
