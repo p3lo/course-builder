@@ -13,6 +13,30 @@ import produce from 'immer';
 
 const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> = ({ type, uppyId, path }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
+  const [option, setOption] = useState<string>(() => {
+    if (uppyId !== 'details_image') {
+      if (uppyId === 'details_video') {
+        if (courseInfo.preview?.includes('youtu')) {
+          return 'youtube';
+        } else if (courseInfo.preview?.includes('vimeo')) {
+          return 'vimeo';
+        } else {
+          return 'cloud';
+        }
+      } else {
+        const indexes = uppyId.split('-');
+        if (courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url?.includes('youtu')) {
+          return 'youtube';
+        } else if (courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url?.includes('vimeo')) {
+          return 'vimeo';
+        } else {
+          return 'cloud';
+        }
+      }
+    } else {
+      return 'cloud';
+    }
+  });
   const [uppyInfo, setUppyInfo] = useState<string>(() => {
     if (uppyId === 'details_image') {
       return '3';
@@ -22,7 +46,6 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       return '300';
     }
   });
-  console.log(courseInfo);
   const [uploadComplete, setUploadComplete] = useState<string>(() => {
     if (uppyId === 'details_image') {
       return courseInfo.image;
@@ -100,19 +123,37 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
     uppy.close();
   });
   return (
-    <div className="flex flex-col items-center justify-center my-5 space-y-2">
-      <p>Upload file max ({uppyInfo} MB)</p>
-      {uploadComplete && (
-        <div className="flex flex-col items-center text-xs">
-          <p className="font-bold"> Filename: </p>
-          <p className="text-center">{uploadComplete}</p>
-        </div>
+    <div className="flex flex-col items-center justify-center w-full m-5 space-y-2">
+      {uppyId !== 'details_image' && (
+        <select
+          className="h-[30px] w-1/3 outline-none border border-gray-500"
+          id="uploadType"
+          onChange={(e) => setOption(e.target.value)}
+          defaultValue={option}
+        >
+          <option value="cloud">Cloud upload</option>
+          <option value="youtube">Youtube</option>
+          <option value="vimeo">Vimeo</option>
+        </select>
       )}
+      {option === 'cloud' ? (
+        <>
+          <p>Upload file max ({uppyInfo} MB)</p>
+          {uploadComplete && (
+            <div className="flex flex-col items-center text-xs">
+              <p className="font-bold"> Filename: </p>
+              <p className="text-center">{uploadComplete}</p>
+            </div>
+          )}
 
-      <FileInput uppy={uppy} pretty />
-      <div className="w-full">
-        <StatusBar uppy={uppy} hideUploadButton showProgressDetails />
-      </div>
+          <FileInput uppy={uppy} pretty />
+          <div className="w-full">
+            <StatusBar uppy={uppy} hideUploadButton showProgressDetails />
+          </div>
+        </>
+      ) : (
+        <input type="text" className="w-3/4 px-3 py-2 border outline-none" placeholder="url"></input>
+      )}
     </div>
   );
 };
