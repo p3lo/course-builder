@@ -2,8 +2,8 @@ import { Dialog, Transition } from '@headlessui/react';
 import produce from 'immer';
 import { Fragment, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { modalLessonVideoAtom } from '../recoil/atoms/modalsAtom';
-import { ToggleWithVideo } from '../types';
+import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
+import { ToggleWithVideo } from '../../types';
 import VideoPlayer from './VideoPlayer';
 import { AiOutlineClose } from 'react-icons/ai';
 

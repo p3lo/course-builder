@@ -1,4 +1,4 @@
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
 import { Disclosure, Transition } from '@headlessui/react';
 import { HiChevronDown } from 'react-icons/hi';
@@ -9,7 +9,7 @@ import { AiOutlineEdit } from 'react-icons/ai';
 import { HiOutlineTrash } from 'react-icons/hi';
 import produce from 'immer';
 import BuilderAccordionPanelItem from './BuilderAccordionPanelItem';
-import { FullCourse } from '../types';
+import { FullCourse } from '../../types';
 import { Draggable } from 'react-beautiful-dnd';
 
 const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ index, open }) => {

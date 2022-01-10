@@ -1,4 +1,4 @@
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
 import { Disclosure } from '@headlessui/react';
 import produce from 'immer';

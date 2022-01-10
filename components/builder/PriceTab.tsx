@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Switch } from '@headlessui/react';
 import { useRecoilState } from 'recoil';
-import { FullCourse } from '../types';
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { FullCourse } from '../../types';
+import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import produce from 'immer';
 
 export default function PriceTab() {

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { useRecoilState } from 'recoil';
-import { FullCourse } from '../../types';
-import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
+import { FullCourse } from '../../../types';
+import { courseBuildAtom } from '../../../recoil/atoms/courseBuildAtom';
 import produce from 'immer';
 
 export default function RichTextEditor() {

@@ -6,13 +6,14 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import slugify from 'slugify';
+import CourseCard from '../components/CourseCard';
 import { supabase } from '../lib/supabaseClient';
 import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
 import { FullCourse, CourseName } from '../types';
 
-const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
+const Home: React.FC<{ courses: FullCourse[] }> = ({ courses }) => {
   const [courseTitle, setCourseTitle] = useState<string>('');
-  const [pulledCourses, setPulledCourses] = useState<CourseName[]>(courses);
+  const [pulledCourses, setPulledCourses] = useState<FullCourse[]>(courses);
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const router = useRouter();
   const [session, setSession] = useState(null);
@@ -61,62 +62,73 @@ const Home: React.FC<{ courses: CourseName[] }> = ({ courses }) => {
       </Head>
 
       <div>
-        {session ? (
-          <button
-            onClick={() => {
-              supabase.auth.signOut();
-              router.push('/');
-            }}
-          >
-            Sign out
+        <section>
+          {session ? (
+            <button
+              onClick={() => {
+                supabase.auth.signOut();
+                router.push('/');
+              }}
+            >
+              Sign out
+            </button>
+          ) : (
+            <button onClick={() => router.push('/login')}>Sign in</button>
+          )}
+          <input
+            type="text"
+            className="p-3 border outline-none"
+            value={courseTitle}
+            onChange={(e) => setCourseTitle(e.target.value)}
+          />
+          <button className="p-3 mb-3 border" onClick={createCourse}>
+            Create course
           </button>
-        ) : (
-          <button onClick={() => router.push('/login')}>Sign in</button>
-        )}
-        <input
-          type="text"
-          className="p-3 border outline-none"
-          value={courseTitle}
-          onChange={(e) => setCourseTitle(e.target.value)}
-        />
-        <button className="p-3 mb-3 border" onClick={createCourse}>
-          Create course
-        </button>
-        <p className="mt-10">Authored Courses</p>
-        {pulledCourses.map((item) =>
-          item.author.id === session?.user.id ? (
-            <div className="flex space-x-2" key={item.id}>
-              <p>
-                {item.title} {item.slug}
-              </p>
-              <button className="p-3 border" onClick={() => deleteCourse(item.id)}>
-                Delete
-              </button>
-              <Link href={`/builder/${item.slug}`}>
-                <a className="p-3 border">Edit course</a>
-              </Link>
-            </div>
-          ) : null
-        )}
-        <p className="mt-10">All Courses</p>
-        {pulledCourses.map((item) => (
-          <div className="flex space-x-2" key={item.id}>
-            <p>
-              {item.title} {item.slug}
-            </p>
-            {item.author.id === session?.user.id && (
-              <div className="flex space-x-2">
+          <p className="mt-10">Authored Courses</p>
+          {pulledCourses.map((item) =>
+            item.author.id === session?.user.id ? (
+              <div className="flex space-x-2" key={item.id}>
+                <p>
+                  {item.title} {item.slug}
+                </p>
                 <button className="p-3 border" onClick={() => deleteCourse(item.id)}>
                   Delete
                 </button>
-
                 <Link href={`/builder/${item.slug}`}>
                   <a className="p-3 border">Edit course</a>
                 </Link>
               </div>
-            )}
+            ) : null
+          )}
+        </section>
+        <section className="bg-gray-100">
+          <p className="mt-10">All Courses</p>
+          {pulledCourses.map((item) => (
+            <div className="flex space-x-2" key={item.id}>
+              <p>
+                {item.title} {item.slug}
+              </p>
+              {item.author.id === session?.user.id && (
+                <div className="flex space-x-2">
+                  <button className="p-3 border" onClick={() => deleteCourse(item.id)}>
+                    Delete
+                  </button>
+
+                  <Link href={`/builder/${item.slug}`}>
+                    <a className="p-3 border">Edit course</a>
+                  </Link>
+                </div>
+              )}
+            </div>
+          ))}
+        </section>
+        <section className="">
+          <div className="flex p-5 space-x-5">
+            {pulledCourses.map((item) => (
+              <CourseCard key={item.id} course={item} />
+            ))}
           </div>
-        ))}
+        </section>
       </div>
     </div>
   );

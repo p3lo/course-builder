@@ -1,10 +1,10 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Listbox, Transition } from '@headlessui/react';
 import { HiCheck, HiSelector } from 'react-icons/hi';
-import { Category, CategoryIndex, FullCourse } from '../../types';
+import { Category, CategoryIndex, FullCourse } from '../../../types';
 import produce from 'immer';
 import { useRecoilState } from 'recoil';
-import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
+import { courseBuildAtom } from '../../../recoil/atoms/courseBuildAtom';
 
 const Categories: React.FC<{ categories: Category[]; catIndex: CategoryIndex }> = ({ categories, catIndex }) => {
   const [selectedMain, setSelectedMain] = useState<Category>(categories[0]);

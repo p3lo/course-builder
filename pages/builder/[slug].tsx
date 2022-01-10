@@ -1,4 +1,4 @@
-import BuilderAccordion from '../../components/BuilderAccordion';
+import BuilderAccordion from '../../components/builder/BuilderAccordion';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
 import { Category, FullCourse } from '../../types';
@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Tab } from '@headlessui/react';
 import { toast } from 'react-toastify';
-import CourseDetails from '../../components/CourseDetails';
+import CourseDetails from '../../components/builder/CourseDetails';
 import { supabase } from '../../lib/supabaseClient';
 import { useRouter } from 'next/router';
-import PriceTab from '../../components/PriceTab';
+import PriceTab from '../../components/builder/PriceTab';
 
 const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ courses, categories }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);

@@ -1,13 +1,13 @@
 import { useRecoilState } from 'recoil';
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { AiOutlineEdit, AiFillPlayCircle } from 'react-icons/ai';
 import { HiOutlineTrash } from 'react-icons/hi';
 import { useState } from 'react';
 import { Transition } from '@headlessui/react';
 import produce from 'immer';
-import { FullCourse, ToggleWithVideo } from '../types';
+import { FullCourse, ToggleWithVideo } from '../../types';
 import WasabiUpload from './WasabiUpload';
-import { modalLessonVideoAtom } from '../recoil/atoms/modalsAtom';
+import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
 
 const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }> = ({ index, lessonIndex }) => {
   const [videoModal, setVideoModal] = useRecoilState<ToggleWithVideo>(modalLessonVideoAtom);

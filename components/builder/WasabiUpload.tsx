@@ -7,8 +7,8 @@ import '@uppy/file-input/dist/style.min.css';
 import '@uppy/status-bar/dist/style.min.css';
 import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
-import { FullCourse } from '../types';
-import { courseBuildAtom } from '../recoil/atoms/courseBuildAtom';
+import { FullCourse } from '../../types';
+import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import produce from 'immer';
 
 const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> = ({ type, uppyId, path }) => {
