@@ -93,7 +93,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
               </span>
             </div>
             <label className="mt-2 ml-4 text-xs">Content upload</label>
-            <div className="flex flex-col items-center justify-center w-full px-2 mb-4 border">
+            <div className="flex flex-col items-center justify-center  mx-2 mb-4 border">
               <WasabiUpload
                 type={['video/*']}
                 uppyId={`${index.toString()}-${lessonIndex.toString()}`}

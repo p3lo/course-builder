@@ -11,6 +11,8 @@ export const courseBuildAtom = atom({
     author: { id: '' },
     image: '',
     preview: '',
+    price: 0,
+    discount_price: 0,
     subcategory: {
       id: 2,
       main_category: { id: 2 },

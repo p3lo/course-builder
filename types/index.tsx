@@ -59,5 +59,7 @@ export interface FullCourse extends CourseName {
   subcategory: Subcategory;
   image?: string;
   preview?: string;
+  price?: number;
+  discount_price?: number;
   content: Section[];
 }

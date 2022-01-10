@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 import CourseDetails from '../../components/CourseDetails';
 import { supabase } from '../../lib/supabaseClient';
 import { useRouter } from 'next/router';
+import PriceTab from '../../components/PriceTab';
 
 const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ courses, categories }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
@@ -46,6 +47,8 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
         preview: courseInfo.preview,
         subcategory: courseInfo.subcategory.id,
         author: courseInfo.author.id,
+        price: courseInfo.price,
+        discount_price: courseInfo.discount_price,
         content: courseInfo.content,
       });
       console.log(data, error);
@@ -58,6 +61,8 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
         preview: courseInfo.preview,
         subcategory: courseInfo.subcategory.id,
         author: session.user.id,
+        price: courseInfo.price,
+        discount_price: courseInfo.discount_price,
         content: courseInfo.content,
       });
       console.log(data, error);
@@ -116,7 +121,9 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
           <Tab.Panel className="outline-none">
             <CourseDetails categories={categories} />
           </Tab.Panel>
-          <Tab.Panel className="outline-none">Content 3</Tab.Panel>
+          <Tab.Panel className="outline-none">
+            <PriceTab />
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
       <div>
