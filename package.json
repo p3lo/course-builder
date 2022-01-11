@@ -10,6 +10,8 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.45.0",
     "@aws-sdk/s3-request-presigner": "^3.45.0",
+    "@ckeditor/ckeditor5-build-classic": "^31.1.0",
+    "@ckeditor/ckeditor5-react": "^3.0.3",
     "@headlessui/react": "^1.4.2",
     "@next-auth/mongodb-adapter": "^1.0.1",
     "@reach/portal": "^0.16.2",

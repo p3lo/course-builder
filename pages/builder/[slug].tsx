@@ -140,6 +140,16 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
 export default Builder;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { user } = await supabase.auth.api.getUserByCookie(context.req);
+
+  if (!user) {
+    // If no user, redirect to index.
+    return { props: {}, redirect: { destination: '/login', permanent: false } };
+  }
+  // if (user?.app_metadata?.role !== 'admin') {
+  //   return { props: {}, redirect: { destination: '/', permanent: false } };
+  // }
+
   const slug = context.params.slug;
   const { data: course } = await supabase
     .from('courses')

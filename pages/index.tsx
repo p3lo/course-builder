@@ -64,14 +64,25 @@ const Home: React.FC<{ courses: FullCourse[] }> = ({ courses }) => {
       <div>
         <section>
           {session ? (
-            <button
-              onClick={() => {
-                supabase.auth.signOut();
-                router.push('/');
-              }}
-            >
-              Sign out
-            </button>
+            <div className="flex space-x-5">
+              <button
+                className="p-3 border"
+                onClick={() => {
+                  supabase.auth.signOut();
+                  router.push('/');
+                }}
+              >
+                Sign out
+              </button>
+              <button
+                className="p-3 border"
+                onClick={() => {
+                  router.push(`/user/${session.user.id}`);
+                }}
+              >
+                Profile
+              </button>
+            </div>
           ) : (
             <button onClick={() => router.push('/login')}>Sign in</button>
           )}

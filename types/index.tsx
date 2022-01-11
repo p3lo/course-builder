@@ -15,6 +15,8 @@ export interface Author {
   role?: string;
 }
 
+export interface ProfileType extends Author {}
+
 export interface CategoryIndex {
   catIndex: number;
   subcatIndex: number;
@@ -61,5 +63,5 @@ export interface FullCourse extends CourseName {
   preview?: string;
   price?: number;
   discount_price?: number;
-  content: Section[];
+  content?: Section[];
 }
