@@ -5,20 +5,21 @@ import { Tab } from '@headlessui/react';
 import Profile from '../../components/user/Profile';
 import { FullCourse, ProfileType } from '../../types';
 import MyCourses from '../../components/user/MyCourses';
+import { AiOutlineHome } from 'react-icons/ai';
+import { useRouter } from 'next/router';
 
 const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ courses, profile }) => {
-  useEffect(() => {
-    console.log(profile, courses);
-  }, [profile, courses]);
+  const router = useRouter();
   return (
-    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] screen-h">
-      <Tab.Group>
-        <Tab.List className="m-3 space-x-10 ">
+    <div className="relative w-full px-3 sm:px-5 md:px-14 xl:px-[100px] text-white bg-gray-700">
+      <AiOutlineHome onClick={() => router.push('/')} className="absolute text-white cursor-pointer w-7 h-7 inset-1" />
+      <Tab.Group as="div" className="h-screen ">
+        <Tab.List className="flex items-center justify-center space-x-1">
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-600'
-                : 'bg-white p-3 text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-200 bg-gray-600 w-56'
+                : 'p-3 text-sm w-56 text-white hover:bg-gray-500 hover:shadow-md shadow-gray-800'
             }
           >
             Profile
@@ -26,8 +27,8 @@ const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ cours
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 text-sm font-bold outline-none text-gray-600'
-                : 'bg-white p-3 text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-200 bg-gray-600 w-56'
+                : 'p-3 text-sm w-56 text-white hover:bg-gray-500 hover:shadow-md shadow-gray-800'
             }
           >
             My courses
@@ -35,14 +36,14 @@ const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ cours
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-600'
-                : 'bg-white p-3 text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-200 bg-gray-600 w-56'
+                : 'p-3 text-sm w-56 text-white hover:bg-gray-500 hover:shadow-md shadow-gray-800'
             }
           >
             Price settings
           </Tab>
         </Tab.List>
-        <Tab.Panels>
+        <Tab.Panels className="mt-5">
           <Tab.Panel className="outline-none">
             <Profile profile={profile} />
           </Tab.Panel>

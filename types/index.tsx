@@ -13,6 +13,12 @@ export interface Author {
   avatar_url?: string;
   website?: string;
   role?: string;
+  headline?: string;
+  description?: string;
+  twitter?: string;
+  facebook?: string;
+  linkedin?: string;
+  youtube?: string;
 }
 
 export interface ProfileType extends Author {}

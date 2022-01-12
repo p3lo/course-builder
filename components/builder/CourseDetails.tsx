@@ -1,10 +1,9 @@
-import axios from 'axios';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRecoilValue } from 'recoil';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { Category, CategoryIndex, FullCourse } from '../../types';
-import RichTextEditor from './rte/RichTextEditor';
+import CKEditor from './rte/CKEditor';
 import Categories from './select/Categories';
 import VideoPlayer from './VideoPlayer';
 import WasabiUpload from './WasabiUpload';
@@ -12,7 +11,8 @@ import WasabiUpload from './WasabiUpload';
 const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => {
   const courseInfo = useRecoilValue<FullCourse>(courseBuildAtom);
   const [categoryIndex, setCategoryIndex] = useState<CategoryIndex>({ catIndex: 0, subcatIndex: 0 });
-  console.log(courseInfo);
+  const [userDescription, setUserDescription] = useState<string>('');
+  const [editorLoadedDescription, setEditorLoadedDescription] = useState<boolean>(false);
 
   useEffect(() => {
     const mainCat: number = categories.findIndex((cat) => courseInfo.subcategory.main_category.id === cat.id);
@@ -20,6 +20,9 @@ const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => 
       (subcat) => courseInfo.subcategory.id === subcat.id
     );
     setCategoryIndex({ catIndex: mainCat, subcatIndex: subCat });
+  }, []);
+  useEffect(() => {
+    setEditorLoadedDescription(true);
   }, []);
 
   return (
@@ -29,7 +32,16 @@ const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => 
       </div>
       <div className="flex flex-col">
         <label className="mx-3 text-xs">Description</label>
-        <RichTextEditor />
+        <CKEditor
+          name="description"
+          onChange={(description) => {
+            setUserDescription(description);
+          }}
+          // value={description}
+          toolbar="details"
+          value={userDescription}
+          editorLoaded={editorLoadedDescription}
+        />
       </div>
       <div className="flex flex-col">
         <label className="mx-3 text-xs">Preview image</label>
