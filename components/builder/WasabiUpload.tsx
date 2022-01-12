@@ -123,10 +123,10 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
     uppy.close();
   });
   return (
-    <div className="flex flex-col items-center justify-center w-full m-5 space-y-2">
+    <div className="flex flex-col items-center justify-center w-full m-5 space-y-2 ">
       {uppyId !== 'details_image' && (
         <select
-          className="h-[30px] w-1/3 outline-none border border-gray-500"
+          className="h-[30px] w-1/3 outline-none border border-gray-200 text-gray-800 bg-gray-100"
           id="uploadType"
           onChange={(e) => setOption(e.target.value)}
           defaultValue={option}
@@ -152,7 +152,11 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
           </div>
         </>
       ) : (
-        <input type="text" className="w-3/4 px-3 py-2 border outline-none" placeholder="url"></input>
+        <input
+          type="text"
+          className="w-3/4 px-3 py-2 text-gray-800 bg-gray-100 border outline-none"
+          placeholder="url"
+        ></input>
       )}
     </div>
   );

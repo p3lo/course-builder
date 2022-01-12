@@ -3,7 +3,6 @@ import { FullCourse } from '../types';
 import { AiOutlineEye } from 'react-icons/ai';
 
 const CourseCard: React.FC<{ course: FullCourse }> = ({ course }) => {
-  console.log(course.author);
   return (
     <div className="relative space-y-1 h-[320px] cursor-pointer hover:shadow-md hover:shadow-gray-800 group">
       <div className="h-40 overflow-hidden border border-gray-500 w-60 group-hover:opacity-50">

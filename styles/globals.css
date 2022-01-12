@@ -76,3 +76,13 @@ body {
   border: var(--ck-focus-ring);
   box-shadow: var(--ck-focus-outer-shadow), var(--ck-inner-shadow);
 }
+
+.uppy-FileInput-container .uppy-FileInput-btn {
+  border: 1px solid aliceblue;
+  background-color: aliceblue;
+  color: black;
+}
+
+.uppy-FileInput-container .uppy-FileInput-btn:hover {
+  background-color: lightcoral;
+}

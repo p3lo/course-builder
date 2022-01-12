@@ -112,7 +112,7 @@ const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ inde
               leaveFrom="transform scale-100 opacity-100"
               leaveTo="transform scale-95 opacity-0"
             >
-              <Disclosure.Panel className="px-4 py-2 space-y-1 text-sm text-gray-500">
+              <Disclosure.Panel className="px-4 py-2 space-y-1 text-sm text-gray-200">
                 {courseInfo.content[index].lessons.map((_, key) => (
                   <BuilderAccordionPanelItem key={key} index={index} lessonIndex={key} />
                 ))}

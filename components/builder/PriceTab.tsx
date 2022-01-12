@@ -28,39 +28,49 @@ export default function PriceTab() {
   }, [price, discountPrice]);
 
   return (
-    <div className="px-5 py-4 sm:py-0 flex flex-col sm:flex-row w-full items-center space-x-10">
-      <div className="py-10 flex flex-col space-y-1">
-        <label className=" text-xs">{enabled ? 'Free course' : 'Course price'}</label>
+    <div className="flex flex-col items-center w-full px-5 py-4 space-x-10 sm:py-0 sm:flex-row">
+      <div className="flex flex-col py-10 space-y-1">
+        <label className="text-xs ">{enabled ? 'Free course' : 'Course price'}</label>
         <Switch
           checked={enabled}
           onChange={setEnabled}
-          className={`${enabled ? 'bg-teal-900' : 'bg-teal-700'}
+          className={`${enabled ? 'bg-gray-500' : 'bg-gray-300'}
           relative  inline-flex flex-shrink-0 h-[28px] w-[52px] border-2 border-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
         >
           <span className="sr-only">Use setting</span>
           <span
             aria-hidden="true"
             className={`${enabled ? 'translate-x-6' : 'translate-x-0'}
-            pointer-events-none inline-block h-[24px] w-[24px] rounded-full bg-white shadow-lg transform ring-0 transition ease-in-out duration-200`}
+            pointer-events-none inline-block h-[24px] w-[24px] rounded-full bg-gray-700 shadow-lg transform ring-0 transition ease-in-out duration-200`}
           />
         </Switch>
       </div>
       {!enabled && (
-        <div className="flex flex-col sm:flex-row sm:space-x-5 space-y-5 sm:space-y-0 ">
+        <div className="flex flex-col space-y-5 sm:flex-row sm:space-x-5 sm:space-y-0 ">
           <div className="flex flex-col">
-            <label className=" text-xs pl-2">Price</label>
+            <label className="pl-2 text-xs ">Price</label>
             <input
-              className="px-3 py-2 outline-none border"
-              type="number"
+              className="px-3 py-2 text-gray-700 border outline-none"
+              type="text"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
               defaultValue={price}
               onChange={(e) => setPrice(+e.target.value)}
             ></input>
           </div>
           <div className="flex flex-col">
-            <label className=" text-xs pl-2">Discounted price</label>
+            <label className="pl-2 text-xs ">Discounted price</label>
             <input
-              className="px-3 py-2 outline-none border"
-              type="number"
+              className="px-3 py-2 text-gray-700 border outline-none"
+              type="text"
+              onKeyPress={(event) => {
+                if (!/[0-9]/.test(event.key)) {
+                  event.preventDefault();
+                }
+              }}
               defaultValue={discountPrice}
               onChange={(e) => setDiscountPrice(+e.target.value)}
             ></input>

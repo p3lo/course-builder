@@ -56,7 +56,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
         </div>
         <div className="flex space-x-2">
           <AiOutlineEdit
-            className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-blue-800"
+            className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-blue-300"
             onClick={() => setEditToggle(!editToggle)}
           />
           <HiOutlineTrash
@@ -77,11 +77,11 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
       >
         <div className="w-full border-b border-gray-400" />
         <div className="flex flex-col mb-2 space-y-2">
-          <div className="flex flex-col bg-gray-50">
+          <div className="flex flex-col bg-gray-500">
             <label className="mt-2 ml-4 text-xs">Lesson title</label>
             <div className="relative flex w-full px-2 mb-2">
               <input
-                className="flex-grow px-3 py-1 border outline-none rounded-l-md focus:border-blue-400 focus:shadow-sm focus:shadow-blue-200"
+                className="flex-grow px-3 py-1 text-gray-700 placeholder-gray-400 border outline-none rounded-l-md focus:border-blue-400 focus:shadow-sm focus:shadow-blue-200"
                 defaultValue={courseInfo.content[index].lessons[lessonIndex].title}
                 placeholder="Lesson title"
                 onChange={(e) => setLessonTitle(e.target.value)}
@@ -93,7 +93,7 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
               </span>
             </div>
             <label className="mt-2 ml-4 text-xs">Content upload</label>
-            <div className="flex flex-col items-center justify-center  mx-2 mb-4 border">
+            <div className="flex flex-col items-center justify-center mx-2 mb-4 border">
               <WasabiUpload
                 type={['video/*']}
                 uppyId={`${index.toString()}-${lessonIndex.toString()}`}

@@ -1,42 +1,56 @@
+import produce from 'immer';
 import { useEffect, useState } from 'react';
+import { useRecoilState } from 'recoil';
+import { supabase } from '../../lib/supabaseClient';
+import { userProfileAtom } from '../../recoil/atoms/userProfileAtom';
 import { ProfileType } from '../../types';
 import CKEditor from '../builder/rte/CKEditor';
 
-const Profile: React.FC<{ profile: ProfileType }> = ({ profile }) => {
+const Profile: React.FC<{}> = () => {
+  const [userProfile, setUserProfile] = useRecoilState<ProfileType>(userProfileAtom);
   const [editorLoadedDescription, setEditorLoadedDescription] = useState<boolean>(false);
-  const [fullName, setFullName] = useState<string>(profile.username || '');
-  const [userDescription, setUserDescription] = useState<string>(profile.description || '');
-  const [headline, setHeadline] = useState<string>(profile.headline || '');
-  const [website, setWebsite] = useState<string>(profile.website || '');
-  const [twitter, setTwitter] = useState<string>(profile.twitter || '');
-  const [facebook, setFacebook] = useState<string>(profile.facebook || '');
-  const [linkedin, setLinkedin] = useState<string>(profile.linkedin || '');
-  const [youtube, setYoutube] = useState<string>(profile.youtube || '');
+  const [fullName, setFullName] = useState<string>(userProfile.username || '');
+  const [userDescription, setUserDescription] = useState<string>(userProfile.description || '');
+  const [headline, setHeadline] = useState<string>(userProfile.headline || '');
+  const [website, setWebsite] = useState<string>(userProfile.website || '');
+  const [twitter, setTwitter] = useState<string>(userProfile.twitter || '');
+  const [facebook, setFacebook] = useState<string>(userProfile.facebook || '');
+  const [linkedin, setLinkedin] = useState<string>(userProfile.linkedin || '');
+  const [youtube, setYoutube] = useState<string>(userProfile.youtube || '');
+
   useEffect(() => {
     setEditorLoadedDescription(true);
   }, []);
 
-  function setProfile() {
-    // axios
-    //   .post('/api/user/user', {
-    //     data: {
-    //       fullName,
-    //       userDescription,
-    //       headline,
-    //       website,
-    //       twitter,
-    //       facebook,
-    //       linkedin,
-    //       youtube,
-    //     },
-    //   })
-    //   .then((response) => {
-    //     if (response.data.success) {
-    //       fullNameProp(fullName);
-    //       userTitle(headline);
-    //     }
-    //   });
-  }
+  const setProfile = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        username: fullName,
+        updated_at: Date.now,
+        website,
+        headline,
+        description: userDescription,
+        twitter,
+        facebook,
+        linkedin,
+        youtube,
+      })
+      .match({ id: userProfile.id });
+    if (!error) {
+      const setProfile = produce(userProfile, (draft) => {
+        draft.username = fullName;
+        draft.website = website;
+        draft.headline = headline;
+        draft.description = userDescription;
+        draft.twitter = twitter;
+        draft.facebook = facebook;
+        draft.linkedin = linkedin;
+        draft.youtube = youtube;
+      });
+      setUserProfile(setProfile);
+    }
+  };
 
   return (
     <div className="w-full">
@@ -57,7 +71,7 @@ const Profile: React.FC<{ profile: ProfileType }> = ({ profile }) => {
               onChange={(e) => setHeadline(e.target.value)}
             />
             <label className="text-[10px] text-gray-400">
-              Add a professional headline like, "Engineer at Udemy" or "Architect."
+              {'Add a professional headline like, "Engineer at BMC" or "Architect."'}
             </label>
           </div>
           <div>

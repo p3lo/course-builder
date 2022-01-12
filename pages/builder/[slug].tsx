@@ -80,15 +80,16 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
   };
 
   return (
-    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] screen-h">
-      <h1 className="mx-auto my-3 text-2xl text-center">{courseInfo.title}</h1>
+    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] min-h-screen text-white bg-gray-700">
+      <h1 className="py-3 mx-auto text-2xl font-bold text-center">{courseInfo.title}</h1>
+      <div className="border-b border-gray-400" />
       <Tab.Group>
-        <Tab.List className="m-3 space-x-10 ">
+        <Tab.List className="m-3 space-x-1 ">
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-600'
-                : 'bg-white p-3 text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-200 bg-gray-600 w-56'
+                : 'p-3 text-sm w-56 text-white hover:bg-gray-500 hover:shadow-md shadow-gray-800'
             }
           >
             Build course
@@ -96,8 +97,8 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 text-sm font-bold outline-none text-gray-600'
-                : 'bg-white p-3 text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-200 bg-gray-600 w-56'
+                : 'p-3 text-sm w-56 text-white hover:bg-gray-500 hover:shadow-md shadow-gray-800'
             }
           >
             Course details
@@ -105,8 +106,8 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
           <Tab
             className={({ selected }) =>
               selected
-                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-600'
-                : 'bg-white p-3 text-sm text-gray-600'
+                ? 'border-blue-300 border-b-2 p-3 font-bold text-sm outline-none text-gray-200 bg-gray-600 w-56'
+                : 'p-3 text-sm w-56 text-white hover:bg-gray-500 hover:shadow-md shadow-gray-800'
             }
           >
             Price settings
@@ -126,12 +127,12 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
-      <div>
-        <button onClick={saveData} className="p-3 border">
+      <div className="flex py-5 space-x-2">
+        <button onClick={saveData} className="px-3 py-2 w-[200px] border">
           Save course
         </button>
         <Link href="/">
-          <a className="p-3 border">Home</a>
+          <a className="px-3 py-2 w-[200px] border text-center">Home</a>
         </Link>
       </div>
     </div>

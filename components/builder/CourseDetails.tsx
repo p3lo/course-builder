@@ -26,12 +26,12 @@ const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => 
   }, []);
 
   return (
-    <div className="relative flex flex-col space-y-3 text-sm">
+    <div className="relative flex flex-col space-y-3 text-sm ">
       <div className="">
         <Categories categories={categories} catIndex={categoryIndex} />
       </div>
-      <div className="flex flex-col">
-        <label className="mx-3 text-xs">Description</label>
+      <div className="flex flex-col text-gray-800">
+        <label className="mx-3 text-xs text-white">Description</label>
         <CKEditor
           name="description"
           onChange={(description) => {

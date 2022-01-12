@@ -7,13 +7,19 @@ import { FullCourse, ProfileType } from '../../types';
 import MyCourses from '../../components/user/MyCourses';
 import { AiOutlineHome } from 'react-icons/ai';
 import { useRouter } from 'next/router';
+import { userProfileAtom } from '../../recoil/atoms/userProfileAtom';
+import { useRecoilState } from 'recoil';
 
 const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ courses, profile }) => {
+  const [userProfile, setUserProfile] = useRecoilState<ProfileType>(userProfileAtom);
   const router = useRouter();
+  useEffect(() => {
+    setUserProfile(profile);
+  }, [profile]);
   return (
-    <div className="relative w-full px-3 sm:px-5 md:px-14 xl:px-[100px] text-white bg-gray-700">
+    <div className="relative w-full px-3 sm:px-5 md:px-14 xl:px-[100px] text-white bg-gray-700 min-h-screen">
       <AiOutlineHome onClick={() => router.push('/')} className="absolute text-white cursor-pointer w-7 h-7 inset-1" />
-      <Tab.Group as="div" className="h-screen ">
+      <Tab.Group>
         <Tab.List className="flex items-center justify-center space-x-1">
           <Tab
             className={({ selected }) =>
@@ -45,7 +51,7 @@ const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ cours
         </Tab.List>
         <Tab.Panels className="mt-5">
           <Tab.Panel className="outline-none">
-            <Profile profile={profile} />
+            <Profile />
           </Tab.Panel>
           <Tab.Panel className="outline-none">
             <MyCourses courses={courses} />
