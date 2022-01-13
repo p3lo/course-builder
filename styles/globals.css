@@ -6,6 +6,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
 body {
   font-family: 'Source Sans Pro', sans-serif;
+
+  --tw-bg-opacity: 1;
+  background-color: rgb(55 65 81 / var(--tw-bg-opacity));
 }
 
 #loadHTML ul,

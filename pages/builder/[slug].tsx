@@ -80,7 +80,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
   };
 
   return (
-    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] min-h-screen text-white bg-gray-700">
+    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] h-full text-white bg-gray-700 pb-5">
       <h1 className="py-3 mx-auto text-2xl font-bold text-center">{courseInfo.title}</h1>
       <div className="border-b border-gray-400" />
       <Tab.Group>
@@ -131,9 +131,6 @@ const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ co
         <button onClick={saveData} className="px-3 py-2 w-[200px] border">
           Save course
         </button>
-        <Link href="/">
-          <a className="px-3 py-2 w-[200px] border text-center">Home</a>
-        </Link>
       </div>
     </div>
   );

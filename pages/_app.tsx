@@ -7,6 +7,7 @@ import { ToastContainer } from 'react-toastify';
 import { useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import 'react-toastify/dist/ReactToastify.min.css';
+import NavBar from '../components/NavBar';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   useEffect(() => {
@@ -31,6 +32,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <RecoilRoot>
       <NextNProgress />
+      <NavBar />
       <Component {...pageProps} />
       <ToastContainer autoClose={4000} limit={3} position="bottom-center" closeOnClick={true} theme="colored" />
     </RecoilRoot>

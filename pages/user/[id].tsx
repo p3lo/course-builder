@@ -17,8 +17,7 @@ const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ cours
     setUserProfile(profile);
   }, [profile]);
   return (
-    <div className="relative w-full px-3 sm:px-5 md:px-14 xl:px-[100px] text-white bg-gray-700 min-h-screen">
-      <AiOutlineHome onClick={() => router.push('/')} className="absolute text-white cursor-pointer w-7 h-7 inset-1" />
+    <div className="relative w-full px-3 sm:px-5 md:px-14 xl:px-[100px] text-white bg-gray-700 h-full pb-5">
       <Tab.Group>
         <Tab.List className="flex items-center justify-center space-x-1">
           <Tab
