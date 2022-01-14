@@ -89,3 +89,23 @@ body {
 .uppy-FileInput-container .uppy-FileInput-btn:hover {
   background-color: lightcoral;
 }
+
+.tippy-box[data-theme~='dark'] {
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  background-color: rgb(107 114 128 / var(--tw-bg-opacity));
+  color: rgb(243 244 246 / var(--tw-text-opacity));
+}
+
+.tippy-box[data-theme~='dark'][data-placement^='top'] > .tippy-arrow::before {
+  border-top-color: rgb(107 114 128);
+}
+.tippy-box[data-theme~='dark'][data-placement^='bottom'] > .tippy-arrow::before {
+  border-bottom-color: rgb(107 114 128);
+}
+.tippy-box[data-theme~='dark'][data-placement^='left'] > .tippy-arrow::before {
+  border-left-color: rgb(107 114 128);
+}
+.tippy-box[data-theme~='dark'][data-placement^='right'] > .tippy-arrow::before {
+  border-right-color: rgb(107 114 128);
+}

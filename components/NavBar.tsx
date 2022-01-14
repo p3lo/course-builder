@@ -7,8 +7,12 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { Session } from '@supabase/supabase-js';
+import Profile from './navbar/Profile';
+import { CategoryType } from '../types';
+import Category from './navbar/Category';
 
-function NavBar() {
+const NavBar: React.FC<{ categories: CategoryType[] }> = ({ categories }) => {
   const [session, setSession] = useState(null);
   const router = useRouter();
   useEffect(() => {
@@ -24,7 +28,7 @@ function NavBar() {
           <a className="font-mono text-xl antialiased font-extrabold tracking-tighter">Coursemy</a>
         </Link>
         <div className="h-5 border-r border-gray-300" />
-        <CgMenuGridO className="w-6 h-6 cursor-pointer" />
+        <Category categories={categories} />
       </div>
 
       <div className="flex items-center pl-3 pr-1 rounded-full md:border-2">
@@ -46,20 +50,7 @@ function NavBar() {
         {session ? (
           <div className="flex items-center">
             <IoMdNotificationsOutline className="w-[22px] h-[22px] transition duration-150 ease-out transform cursor-pointer hover:scale-125 mr-5" />
-
-            <div
-              className="flex items-center rounded-full cursor-pointer ring-1 ring-gray-200"
-              onClick={() => router.push(`/user/${session.user.id}`)}
-            >
-              <Image
-                src={session?.user.user_metadata.avatar_url}
-                alt="Profile image"
-                width={40}
-                height={40}
-                objectFit="fill"
-                className="overflow-hidden rounded-full"
-              />
-            </div>
+            <Profile session={session} />
           </div>
         ) : (
           <div className="hidden md:inline-flex gap-x-2">
@@ -76,6 +67,6 @@ function NavBar() {
       </div>
     </div>
   );
-}
+};
 
 export default NavBar;

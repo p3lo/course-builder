@@ -28,7 +28,7 @@ export interface CategoryIndex {
   subcatIndex: number;
 }
 
-export interface Category {
+export interface CategoryType {
   id?: number;
   created_at?: Date;
   name: string;
@@ -39,7 +39,7 @@ export interface Subcategory {
   id?: number;
   created_at?: Date;
   name: string;
-  main_category?: Category;
+  main_category?: CategoryType;
 }
 
 export interface Lesson {

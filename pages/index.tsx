@@ -30,31 +30,6 @@ const Home: React.FC<{ courses: FullCourse[] }> = ({ courses }) => {
       </Head>
 
       <div>
-        <section>
-          {session ? (
-            <div className="flex space-x-5">
-              <button
-                className="p-3 border"
-                onClick={() => {
-                  supabase.auth.signOut();
-                  router.push('/');
-                }}
-              >
-                Sign out
-              </button>
-              <button
-                className="p-3 border"
-                onClick={() => {
-                  router.push(`/user/${session.user.id}`);
-                }}
-              >
-                Profile
-              </button>
-            </div>
-          ) : (
-            <button onClick={() => router.push('/login')}>Sign in</button>
-          )}
-        </section>
         <section className="">
           <div className="flex p-5 space-x-5 text-gray-100">
             {pulledCourses.map((item) => (
