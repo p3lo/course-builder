@@ -1,7 +1,7 @@
 import BuilderAccordion from '../../components/builder/BuilderAccordion';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { useRecoilState } from 'recoil';
-import { Category, FullCourse } from '../../types';
+import { CategoryType, FullCourse } from '../../types';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { useRouter } from 'next/router';
 import PriceTab from '../../components/builder/PriceTab';
 
-const Builder: React.FC<{ courses: FullCourse; categories: Category[] }> = ({ courses, categories }) => {
+const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = ({ courses, categories }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const [session, setSession] = useState(null);
   const router = useRouter();

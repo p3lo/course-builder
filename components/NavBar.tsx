@@ -11,21 +11,33 @@ import { Session } from '@supabase/supabase-js';
 import Profile from './navbar/Profile';
 import { CategoryType } from '../types';
 import Category from './navbar/Category';
+import { useRecoilState } from 'recoil';
+import { categoriesAtom } from '../recoil/atoms/categoriesAtom';
 
-const NavBar: React.FC<{ categories: CategoryType[] }> = ({ categories }) => {
+const NavBar: React.FC<{}> = () => {
+  const [categories, setCategories] = useRecoilState<CategoryType[]>(categoriesAtom);
   const [session, setSession] = useState(null);
-  const router = useRouter();
+
   useEffect(() => {
     setSession(supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
   }, []);
+  useEffect(() => {
+    supabase
+      .from('categories')
+      .select('id,name, subcategories!inner(id, name)')
+      .then((result) => {
+        console.log(result);
+        setCategories(result.data);
+      });
+  }, []);
   return (
     <div className="sticky inset-0 top-0 z-10 grid grid-cols-3 px-5 py-2 text-gray-100 bg-gray-500 shadow-md">
       <div className="flex items-center space-x-5">
         <Link href="/">
-          <a className="font-mono text-xl antialiased font-extrabold tracking-tighter">Coursemy</a>
+          <a className="font-mono text-xl antialiased  font-extrabold tracking-tighter">Coursemy</a>
         </Link>
         <div className="h-5 border-r border-gray-300" />
         <Category categories={categories} />
