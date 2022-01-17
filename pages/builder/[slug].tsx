@@ -43,12 +43,15 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
         title: courseInfo.title,
         slug: courseInfo.slug,
         description: courseInfo.description,
+        language: 'English',
+        brief_description: courseInfo.brief_description,
         image: courseInfo.image,
         preview: courseInfo.preview,
         subcategory: courseInfo.subcategory.id,
         author: courseInfo.author.id,
         price: courseInfo.price,
         discount_price: courseInfo.discount_price,
+        updated_at: new Date().toISOString().slice(0, 10),
         content: courseInfo.content,
       });
       console.log(data, error);
@@ -57,12 +60,15 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
         title: courseInfo.title,
         slug: courseInfo.slug,
         description: courseInfo.description,
+        brief_description: courseInfo.brief_description,
+        language: 'English',
         image: courseInfo.image,
         preview: courseInfo.preview,
         subcategory: courseInfo.subcategory.id,
         author: session.user.id,
         price: courseInfo.price,
         discount_price: courseInfo.discount_price,
+        updated_at: new Date().toISOString().slice(0, 10),
         content: courseInfo.content,
       });
       console.log(data, error);

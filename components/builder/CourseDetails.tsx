@@ -1,17 +1,19 @@
+import produce from 'immer';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
-import { Category, CategoryIndex, FullCourse } from '../../types';
+import { CategoryType, CategoryIndex, FullCourse } from '../../types';
 import CKEditor from './rte/CKEditor';
 import Categories from './select/Categories';
 import VideoPlayer from './VideoPlayer';
 import WasabiUpload from './WasabiUpload';
 
-const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => {
-  const courseInfo = useRecoilValue<FullCourse>(courseBuildAtom);
+const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories }) => {
+  const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
   const [categoryIndex, setCategoryIndex] = useState<CategoryIndex>({ catIndex: 0, subcatIndex: 0 });
-  const [userDescription, setUserDescription] = useState<string>('');
+  const [userDescription, setUserDescription] = useState<string>(courseInfo.description);
+  const [briefDescription, setBriefDescription] = useState<string>(courseInfo.brief_description);
   const [editorLoadedDescription, setEditorLoadedDescription] = useState<boolean>(false);
 
   useEffect(() => {
@@ -24,12 +26,30 @@ const CourseDetails: React.FC<{ categories: Category[] }> = ({ categories }) => 
   useEffect(() => {
     setEditorLoadedDescription(true);
   }, []);
+  useEffect(() => {
+    const descriptions = produce(courseInfo, (draft) => {
+      draft.description = userDescription;
+      draft.brief_description = briefDescription;
+    });
+    setCourseInfo(descriptions);
+  }, [userDescription, briefDescription]);
 
   return (
     <div className="relative flex flex-col space-y-3 text-sm ">
       <div className="">
         <Categories categories={categories} catIndex={categoryIndex} />
       </div>
+
+      <div className="flex flex-col text-gray-800">
+        <label className="mx-3 text-xs text-white">Brief description</label>
+        <input
+          className="w-full p-2 border border-gray-300 rounded-sm shadow-sm outline-none focus-within:border-blue-600"
+          value={briefDescription}
+          onChange={(e) => setBriefDescription(e.target.value)}
+          placeholder="Brief description"
+        />
+      </div>
+
       <div className="flex flex-col text-gray-800">
         <label className="mx-3 text-xs text-white">Description</label>
         <CKEditor

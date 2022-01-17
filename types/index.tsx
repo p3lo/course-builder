@@ -62,6 +62,8 @@ export interface CourseName {
 
 export interface FullCourse extends CourseName {
   created_at?: Date;
+  brief_description?: string;
+  language?: string;
   description: string;
   isDraft?: boolean;
   subcategory: Subcategory;
@@ -69,5 +71,6 @@ export interface FullCourse extends CourseName {
   preview?: string;
   price?: number;
   discount_price?: number;
+  updated_at?: Date;
   content?: Section[];
 }
