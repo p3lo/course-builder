@@ -3,17 +3,22 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
-import { CategoryType, CategoryIndex, FullCourse } from '../../types';
+import { CategoryType, CategoryIndex, FullCourse, WhatYoullLearn } from '../../types';
 import CKEditor from './rte/CKEditor';
 import Categories from './select/Categories';
 import VideoPlayer from './VideoPlayer';
 import WasabiUpload from './WasabiUpload';
+import { HiOutlineTrash } from 'react-icons/hi';
+import WhatYouLearn from './WhatYouLearn';
+import { v4 } from 'uuid';
 
 const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
   const [categoryIndex, setCategoryIndex] = useState<CategoryIndex>({ catIndex: 0, subcatIndex: 0 });
-  const [userDescription, setUserDescription] = useState<string>(courseInfo.description);
-  const [briefDescription, setBriefDescription] = useState<string>(courseInfo.brief_description);
+  const [userDescription, setUserDescription] = useState<string>(courseInfo.description ? courseInfo.description : '');
+  const [briefDescription, setBriefDescription] = useState<string>(
+    courseInfo.brief_description ? courseInfo.brief_description : ''
+  );
   const [editorLoadedDescription, setEditorLoadedDescription] = useState<boolean>(false);
 
   useEffect(() => {
@@ -34,6 +39,13 @@ const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories })
     setCourseInfo(descriptions);
   }, [userDescription, briefDescription]);
 
+  const addWhatLearn = () => {
+    const setLearn = produce(courseInfo, (draft) => {
+      draft.what_youll_learn.push({ id: v4(), title: '' });
+    });
+    setCourseInfo(setLearn);
+  };
+
   return (
     <div className="relative flex flex-col space-y-3 text-sm ">
       <div className="">
@@ -48,6 +60,26 @@ const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories })
           onChange={(e) => setBriefDescription(e.target.value)}
           placeholder="Brief description"
         />
+      </div>
+      <div className="flex flex-col">
+        <label className="mx-3 text-xs text-white">{`What you'll learn`}</label>
+
+        <div className="flex flex-col items-center justify-center space-y-5 text-gray-800">
+          <div className="w-full space-y-2">
+            {courseInfo.what_youll_learn?.map((item: WhatYoullLearn) => (
+              <WhatYouLearn key={item.id} item={item} />
+            ))}
+          </div>
+          {courseInfo.what_youll_learn.length < 6 && (
+            <p
+              className="p-2 mt-5 text-sm text-white border border-gray-400 border-dashed cursor-pointer"
+              onClick={() => addWhatLearn()}
+              // onClick={() => setAnswer([...answer, answer.length + 1])}
+            >
+              Add more answers
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-col text-gray-800">

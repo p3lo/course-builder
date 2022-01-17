@@ -9,6 +9,7 @@ export const courseBuildAtom = atom({
     description: '<p></p>',
     isDraft: false,
     author: { id: '' },
+    what_youll_learn: [],
     image: '',
     preview: '',
     price: 0,

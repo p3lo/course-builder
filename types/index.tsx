@@ -53,6 +53,11 @@ export interface Section {
   lessons?: Lesson[];
 }
 
+export interface WhatYoullLearn {
+  id?: string;
+  title?: string;
+}
+
 export interface CourseName {
   id?: number;
   title: string;
@@ -62,9 +67,10 @@ export interface CourseName {
 
 export interface FullCourse extends CourseName {
   created_at?: Date;
-  brief_description?: string;
   language?: string;
   description: string;
+  brief_description?: string;
+  what_youll_learn?: WhatYoullLearn[];
   isDraft?: boolean;
   subcategory: Subcategory;
   image?: string;
