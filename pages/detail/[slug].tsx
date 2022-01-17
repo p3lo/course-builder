@@ -4,6 +4,7 @@ import { FullCourse } from '../../types';
 import CourseHeader from '../../components/detail/CourseHeader';
 import WhatYoullLearn from '../../components/detail/WhatYoullLearn';
 import RightPanel from '../../components/detail/RightPanel';
+import VideoPreviewModal from '../../components/builder/VideoPreviewModal';
 
 const CourseDetail: React.FC<{ course: FullCourse }> = ({ course }) => {
   return (
@@ -27,6 +28,7 @@ const CourseDetail: React.FC<{ course: FullCourse }> = ({ course }) => {
         {/* Feedback */}
         {/* Reviews */}
       </div>
+      <VideoPreviewModal />
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { FullCourse } from '../../types';
+import { FullCourse, ToggleWithVideo } from '../../types';
 import Image from 'next/image';
 import Link from 'next/link';
 import {
@@ -8,12 +8,30 @@ import {
   HiOutlineRefresh,
   HiOutlineClipboardList,
 } from 'react-icons/hi';
+import { AiOutlinePlayCircle } from 'react-icons/ai';
+import { useRecoilState } from 'recoil';
+import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
+import produce from 'immer';
 
 const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
+  const [videoModal, setVideoModal] = useRecoilState<ToggleWithVideo>(modalLessonVideoAtom);
+  function openModal() {
+    const close = produce(videoModal, (draft) => {
+      draft.isOpen = true;
+      draft.url = course.preview;
+      draft.title = course.title;
+    });
+    setVideoModal(close);
+  }
   return (
     <div className="w-[340px] shadow-md bg-gray-600 sticky top-5 ">
-      <div className="relative border border-gray-600 bg-gradient-to-t from-gray-900 to-white w-[340px] h-[170px]">
+      <div
+        className="relative border border-gray-600 bg-gradient-to-t from-gray-900 cursor-pointer to-white w-[340px] h-[170px]"
+        onClick={openModal}
+      >
         <Image src={course.image} alt="Course image" layout="fill" className="opacity-50" objectFit="contain" />
+        <AiOutlinePlayCircle className="absolute justify-center w-12 h-12 top-[60px] left-[150px]  text-gray-600 rounded-full bg-gray-300" />
+        <label className="absolute font-bold text-gray-300 bottom-2 left-[110px] cursor-pointer">Course preview</label>
       </div>
       <div className="px-5 pt-5 space-y-3 text-gray-100">
         <h1 className="text-3xl font-bold">$89.99</h1>
