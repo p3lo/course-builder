@@ -31,7 +31,7 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
     return sum;
   };
   return (
-    <div className="w-[340px] shadow-md bg-gray-600 sticky top-[100px] ">
+    <div className="w-[340px] shadow-md bg-gray-600 sticky top-[80px] ">
       <div
         className="relative border border-gray-600 bg-gradient-to-t from-gray-900 cursor-pointer to-white w-[340px] h-[170px]"
         onClick={openModal}
@@ -49,7 +49,7 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
               ? `$${course.price}`
               : `$${course.discount_price}`}
           </h1>
-          {course.discount_price !== 0 && <h1 className=" line-through">${course.price}</h1>}
+          {course.discount_price !== 0 && <h1 className="line-through ">${course.price}</h1>}
         </div>
         <div className="flex flex-col">
           <Link href="#">

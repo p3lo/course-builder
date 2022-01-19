@@ -1,18 +1,19 @@
 import { supabase } from '../../lib/supabaseClient';
 import { GetServerSideProps } from 'next';
-import { FullCourse } from '../../types';
+import { FullCourse, ProfileType } from '../../types';
 import CourseHeader from '../../components/detail/CourseHeader';
 import WhatYoullLearn from '../../components/detail/WhatYoullLearn';
 import RightPanel from '../../components/detail/RightPanel';
 import VideoPreviewModal from '../../components/builder/VideoPreviewModal';
 import Description from '../../components/detail/Description';
+import Instructor from '../../components/detail/Instructor';
 
 const CourseDetail: React.FC<{ course: FullCourse }> = ({ course }) => {
   return (
-    <div className="w-full  ">
+    <div className="w-full ">
       <div className="grid grid-cols-3 gap-x-5">
         <div className="col-span-2">
-          <div className=" py-5  px-20 bg-gray-800">
+          <div className="px-20 py-5 bg-gray-800 ">
             <CourseHeader course={course} />
           </div>
           <div className="px-20 py-5 space-y-5">
@@ -20,7 +21,7 @@ const CourseDetail: React.FC<{ course: FullCourse }> = ({ course }) => {
             {/* <CourseContent /> */}
             {/* <Requirements /> */}
             <Description course={course} />
-            {/* <Instructor /> */}
+            <Instructor profile={course.author} />
           </div>
         </div>
         <div>

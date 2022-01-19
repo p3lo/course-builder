@@ -11,6 +11,7 @@ export interface Author {
   id?: string;
   username?: string;
   avatar_url?: string;
+  email?: string;
   website?: string;
   role?: string;
   headline?: string;

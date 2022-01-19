@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { AiFillGithub, AiFillGoogleCircle } from 'react-icons/ai';
 
 export default function Auth() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -27,24 +28,43 @@ export default function Auth() {
     setLoading(false);
   }
 
+  async function signInWithGoogle() {
+    setLoading(true);
+    const { user, session, error } = await supabase.auth.signIn({
+      provider: 'google',
+    });
+    if (error) throw error;
+    setLoading(false);
+  }
+
   return (
-    <div className="grid grid-cols-3 pt-10">
+    <div className="grid grid-cols-3 py-10">
       <div className="flex flex-col items-center justify-center w-full max-h-screen col-start-2 space-y-4">
         <h1 className="mb-10 text-3xl font-extrabold ">Supabase + Next.js</h1>
-        <p className="">Log in with github</p>
-        <button onClick={signInWithGithub} className="py-3 border px-7">
-          GitHub
-        </button>
+        <div className="relative">
+          <button onClick={signInWithGithub} className="py-3 border w-[200px]">
+            GitHub
+          </button>
+          <AiFillGithub className="absolute w-7 h-7 inset-3" />
+        </div>
+        <div className="relative">
+          <button onClick={signInWithGoogle} className="py-3 border w-[200px]">
+            Google
+          </button>
+          <AiFillGoogleCircle className="absolute w-7 h-7 inset-3" />
+        </div>
         <div className="w-full border-b border-white" />
         <p className="">Sign in via magic link with your email below</p>
         <div className="w-full ">
-          <input
-            className="w-full p-2 text-sm text-gray-700 placeholder-gray-500 bg-gray-300 border outline-none"
-            type="email"
-            placeholder="Your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <label className="input-group">
+            <span>Email</span>
+            <input
+              type="email"
+              className="w-full input input-bordered"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </label>
         </div>
         <div>
           <button

@@ -9,13 +9,15 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Session } from '@supabase/supabase-js';
 import Profile from './navbar/Profile';
-import { CategoryType } from '../types';
+import { CategoryType, ProfileType } from '../types';
 import Category from './navbar/Category';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { categoriesAtom } from '../recoil/atoms/categoriesAtom';
+import { userProfileAtom } from '../recoil/atoms/userProfileAtom';
 
 const NavBar: React.FC<{}> = () => {
   const [categories, setCategories] = useRecoilState<CategoryType[]>(categoriesAtom);
+  const [user, setUser] = useRecoilState<ProfileType>(userProfileAtom);
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -25,19 +27,28 @@ const NavBar: React.FC<{}> = () => {
     });
   }, []);
   useEffect(() => {
-    supabase
-      .from('categories')
-      .select('id,name, subcategories!inner(id, name)')
-      .then((result) => {
-        console.log(result);
-        setCategories(result.data);
-      });
-  }, []);
+    if (session) {
+      supabase
+        .from('categories')
+        .select('id,name, subcategories!inner(id, name)')
+        .then((result) => {
+          setCategories(result.data);
+        });
+      supabase
+        .from('profiles')
+        .select('id, username, avatar_url, email')
+        .eq('id', session.user.id)
+        .then((result) => {
+          setUser(result.data[0]);
+        });
+    }
+  }, [session]);
+
   return (
     <div className="sticky inset-0 top-0 z-10 grid grid-cols-3 px-5 py-2 text-gray-100 bg-gray-500 shadow-md">
       <div className="flex items-center space-x-5">
         <Link href="/">
-          <a className="font-mono text-xl antialiased  font-extrabold tracking-tighter">Coursemy</a>
+          <a className="font-mono text-xl antialiased font-extrabold tracking-tighter">Coursemy</a>
         </Link>
         <div className="h-5 border-r border-gray-300" />
         <Category categories={categories} />
@@ -59,10 +70,10 @@ const NavBar: React.FC<{}> = () => {
         <div>
           <AiOutlineShoppingCart className="w-5 h-5 transition duration-150 ease-out transform cursor-pointer hover:scale-125" />
         </div>
-        {session ? (
+        {user ? (
           <div className="flex items-center">
             <IoMdNotificationsOutline className="w-[22px] h-[22px] transition duration-150 ease-out transform cursor-pointer hover:scale-125 mr-5" />
-            <Profile session={session} />
+            <Profile user_data={user} />
           </div>
         ) : (
           <div className="hidden md:inline-flex gap-x-2">

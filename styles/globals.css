@@ -97,6 +97,7 @@ body {
 
   background-color: rgb(75 85 99 / var(--tw-bg-opacity));
   color: rgb(243 244 246 / var(--tw-text-opacity));
+  border-width: 1px;
 }
 
 .tippy-box[data-theme~='dark'][data-placement^='top'] > .tippy-arrow::before {

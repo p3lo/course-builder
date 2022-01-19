@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { HiChevronDown } from 'react-icons/hi';
 import { FullCourse } from '../../types';
+import parse from 'html-react-parser';
 
 const Description: React.FC<{ course: FullCourse }> = ({ course }) => {
   const ref = useRef<HTMLInputElement>();
@@ -10,30 +11,24 @@ const Description: React.FC<{ course: FullCourse }> = ({ course }) => {
   function createMarkup() {
     return { __html: course.description };
   }
-  console.log(ref.current?.scrollHeight);
+
   return (
-    <div className="pb-3">
+    <div className="">
       <h1 className="pb-3 text-xl font-bold text-white">Description</h1>
-      <div
-        ref={ref}
-        className="overflow-hidden text-sm text-white duration-300 md:overflow-x-hidden transition-height ease"
-        style={style}
-      >
-        <p
+      <div className="overflow-hidden text-sm text-white duration-300 md:overflow-x-hidden transition-height ease">
+        <div
           className={
             lineClamp
-              ? ''
-              : 'text-transparent bg-clip-text bg-gradient-to-t from-transparent via-transparent to-gray-200'
+              ? 'line-clamp-none'
+              : 'line-clamp-4 text-transparent bg-clip-text bg-gradient-to-t  from-transparent via-gray-500  to-gray-200'
           }
         >
-          <div dangerouslySetInnerHTML={createMarkup()} />
-        </p>
+          {parse(course.description)}
+        </div>
       </div>
-      <div className="flex items-center py-2 text-blue-400 cursor-pointer">
-        <a className="text-sm font-bold " onClick={() => setLineClamp(!lineClamp)}>
-          Read more
-        </a>
-        <HiChevronDown className="h-5 w-5" />
+      <div className="flex items-center py-2 text-blue-400 cursor-pointer" onClick={() => setLineClamp(!lineClamp)}>
+        <a className="text-sm font-bold ">Read more</a>
+        <HiChevronDown className="w-5 h-5" />
       </div>
     </div>
   );
