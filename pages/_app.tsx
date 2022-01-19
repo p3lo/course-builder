@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import 'react-toastify/dist/ReactToastify.min.css';
 import NavBar from '../components/NavBar';
+import Footer from '../components/Footer';
 
 function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   useEffect(() => {
@@ -34,6 +35,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
       <NextNProgress />
       <NavBar />
       <Component {...pageProps} />
+      <Footer />
       <ToastContainer autoClose={4000} limit={3} position="bottom-center" closeOnClick={true} theme="colored" />
     </RecoilRoot>
   );

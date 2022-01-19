@@ -23,8 +23,15 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
     });
     setVideoModal(close);
   }
+  const findNestedSum = (content) => {
+    let sum = 0;
+    for (let len = 0; len < content.length; len++) {
+      sum += content[len].lessons.length;
+    }
+    return sum;
+  };
   return (
-    <div className="w-[340px] shadow-md bg-gray-600 sticky top-5 ">
+    <div className="w-[340px] shadow-md bg-gray-600 sticky top-[100px] ">
       <div
         className="relative border border-gray-600 bg-gradient-to-t from-gray-900 cursor-pointer to-white w-[340px] h-[170px]"
         onClick={openModal}
@@ -34,7 +41,16 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
         <label className="absolute font-bold text-gray-300 bottom-2 left-[110px] cursor-pointer">Course preview</label>
       </div>
       <div className="px-5 pt-5 space-y-3 text-gray-100">
-        <h1 className="text-3xl font-bold">$89.99</h1>
+        <div className="flex space-x-2">
+          <h1 className="text-3xl font-bold">
+            {course.price === 0
+              ? `Free`
+              : course.discount_price === 0
+              ? `$${course.price}`
+              : `$${course.discount_price}`}
+          </h1>
+          {course.discount_price !== 0 && <h1 className=" line-through">${course.price}</h1>}
+        </div>
         <div className="flex flex-col">
           <Link href="#">
             <a className="justify-center w-full py-3 font-bold text-center text-gray-700 bg-blue-300 border">
@@ -57,7 +73,7 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
           </div>
           <div className="flex space-x-3">
             <HiOutlineCode className="w-5 h-5" />
-            <p className="text-sm"> 19 coding exercises</p>
+            <p className="text-sm"> {findNestedSum(course.content)} coding exercises</p>
           </div>
           <div className="flex space-x-3">
             <HiOutlineRefresh className="w-5 h-5" />

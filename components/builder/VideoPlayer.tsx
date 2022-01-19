@@ -1,7 +1,7 @@
 import produce from 'immer';
 import Plyr from 'plyr-react';
 import 'plyr-react/dist/plyr.css';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string }> = ({ videoUrl, videoTitle }) => {
   const [videoParams, setVideoParams] = useState<Plyr.SourceInfo>({
@@ -27,6 +27,7 @@ const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string }> = ({ video
       setVideoParams(provider);
     }
   }, []);
+
   return (
     <>
       <Plyr

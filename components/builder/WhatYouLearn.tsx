@@ -1,25 +1,29 @@
 import produce from 'immer';
+import { useCallback } from 'react';
 import { HiOutlineTrash } from 'react-icons/hi';
 import { useRecoilState } from 'recoil';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import { WhatYoullLearn } from '../../types';
+var _ = require('lodash');
 
 const WhatYouLearn: React.FC<{ item: WhatYoullLearn }> = ({ item }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
-  const setWhatYouLearn = (value: string) => {
+  const setWhatYouLearn = _.debounce((value: string) => {
     const index = courseInfo.what_youll_learn.findIndex((it) => it.id === item.id);
     const setLearn = produce(courseInfo, (draft) => {
       draft.what_youll_learn[index].title = value;
     });
     setCourseInfo(setLearn);
-  };
-  const delWhatLearn = () => {
+  }, 1000);
+
+  const delWhatLearn = _.debounce(() => {
     const index = courseInfo.what_youll_learn.findIndex((it) => it.id === item.id);
     const setLearn = produce(courseInfo, (draft) => {
       draft.what_youll_learn.splice(index, 1);
     });
     setCourseInfo(setLearn);
-  };
+  }, 1000);
+
   return (
     <div className="flex items-center space-x-2">
       <input

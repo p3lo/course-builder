@@ -36,11 +36,13 @@ const CourseCard: React.FC<{ course: FullCourse }> = ({ course }) => {
             <div className="flex gap-2">
               {course.price === 0 ? (
                 <h2 className="text-lg font-bold">Free</h2>
-              ) : (
+              ) : course.discount_price !== 0 ? (
                 <>
                   <h2 className="text-lg font-bold">${course.discount_price}</h2>
                   <h3 className="text-xs text-gray-400 line-through">${course.price}</h3>
                 </>
+              ) : (
+                <h3 className="text-lg font-bold">${course.price}</h3>
               )}
             </div>
             <h2 className="absolute p-1 text-xs font-bold text-red-800 bg-red-200">Bestseller</h2>
