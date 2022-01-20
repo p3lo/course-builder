@@ -7,6 +7,7 @@ import RightPanel from '../../components/detail/RightPanel';
 import VideoPreviewModal from '../../components/builder/VideoPreviewModal';
 import Description from '../../components/detail/Description';
 import Instructor from '../../components/detail/Instructor';
+import CourseContent from '../../components/detail/CourseContent';
 
 const CourseDetail: React.FC<{ course: FullCourse }> = ({ course }) => {
   return (
@@ -18,7 +19,7 @@ const CourseDetail: React.FC<{ course: FullCourse }> = ({ course }) => {
           </div>
           <div className="px-20 py-5 space-y-5">
             <WhatYoullLearn course={course} />
-            {/* <CourseContent /> */}
+            <CourseContent course_content={course.content} />
             {/* <Requirements /> */}
             <Description course={course} />
             <Instructor profile={course.author} />

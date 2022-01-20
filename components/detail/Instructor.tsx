@@ -42,7 +42,7 @@ const Instructor: React.FC<{ profile: ProfileType }> = ({ profile }) => {
           className={
             lineClamp
               ? 'line-clamp-none'
-              : 'line-clamp-2 text-transparent bg-clip-text bg-gradient-to-t from-transparent via-gray-500 to-gray-200'
+              : 'line-clamp-4 text-transparent bg-clip-text bg-gradient-to-t from-transparent via-gray-500 to-gray-200'
           }
         >
           {parse(profile.description)}

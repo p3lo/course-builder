@@ -45,7 +45,7 @@ const NavBar: React.FC<{}> = () => {
   }, [session]);
 
   return (
-    <div className="sticky inset-0 top-0 z-10 grid grid-cols-3 px-5 py-2 text-gray-100 bg-gray-500 shadow-md">
+    <header className="sticky inset-0 top-0 z-10 grid grid-cols-3 px-5 py-2 text-gray-100 bg-gray-500 shadow-md">
       <div className="flex items-center space-x-5">
         <Link href="/">
           <a className="font-mono text-xl antialiased font-extrabold tracking-tighter">Coursemy</a>
@@ -88,7 +88,7 @@ const NavBar: React.FC<{}> = () => {
           </div>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 
