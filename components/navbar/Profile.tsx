@@ -9,7 +9,7 @@ import { ProfileType } from '../../types';
 
 const Profile: React.FC<{ user_data: ProfileType }> = ({ user_data }) => {
   const router = useRouter();
-  console.log(user_data);
+
   const profile = (
     <div className="flex flex-col items-center mx-3 my-1 space-y-2 w-60 ">
       <div className="flex items-center w-full space-x-2">

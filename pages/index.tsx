@@ -29,15 +29,13 @@ const Home: React.FC<{ courses: FullCourse[] }> = ({ courses }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div>
-        <section className="">
-          <div className="flex p-5 space-x-5 text-gray-100">
-            {pulledCourses.map((item) => (
-              <CourseCard key={item.id} course={item} />
-            ))}
-          </div>
-        </section>
-      </div>
+      <section className="max-w-full">
+        <div className="flex p-5 space-x-5 text-gray-100">
+          {pulledCourses.map((item) => (
+            <CourseCard key={item.id} course={item} />
+          ))}
+        </div>
+      </section>
     </div>
   );
 };

@@ -1,8 +1,8 @@
 import produce from 'immer';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import slugify from 'slugify';
 import { supabase } from '../../lib/supabaseClient';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
@@ -14,6 +14,11 @@ const MyCourses: React.FC<{ courses: FullCourse[] }> = ({ courses }) => {
   const [courseTitle, setCourseTitle] = useState<string>('');
   const router = useRouter();
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
+  const resetList = useResetRecoilState(courseBuildAtom);
+
+  useEffect(() => {
+    resetList();
+  }, []);
 
   const createCourse = () => {
     if (!courseTitle) {

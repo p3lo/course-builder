@@ -47,6 +47,7 @@ export interface Lesson {
   title: string;
   description?: string;
   content_url?: string;
+  is_preview?: boolean;
 }
 
 export interface Section {

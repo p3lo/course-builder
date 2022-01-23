@@ -1,6 +1,6 @@
 import BuilderAccordion from '../../components/builder/BuilderAccordion';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { CategoryType, FullCourse } from '../../types';
 import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
@@ -24,6 +24,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
     // if (courseInfo.title === '') {
     //   router.push('/');
     // }
+
     setSession(supabase.auth.session());
     supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
@@ -37,7 +38,9 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
       theme: 'colored',
       closeOnClick: true,
     });
+
     if (courseInfo.id) {
+      console.log('🚀 ~ file: [slug].tsx ~ line 43 ~ saveData ~ courseInfo', courseInfo);
       const { data, error } = await supabase.from('courses').upsert({
         id: courseInfo.id,
         title: courseInfo.title,
@@ -57,6 +60,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
       });
       console.log(data, error);
     } else {
+      console.log('🚀 ~ file: [slug].tsx ~ line 43 ~ saveData ~ courseInfo', courseInfo, session.user.id);
       const { data, error } = await supabase.from('courses').upsert({
         title: courseInfo.title,
         slug: courseInfo.slug,

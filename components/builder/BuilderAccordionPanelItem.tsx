@@ -14,6 +14,9 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
   const [editToggle, setEditToggle] = useState<boolean>(false);
   const [lessonTitle, setLessonTitle] = useState<string>(courseInfo.content[index].lessons[lessonIndex].title);
+  const [isPreview, setIsPreview] = useState<boolean>(
+    courseInfo.content[index].lessons[lessonIndex].is_preview || false
+  );
 
   const updateLesson = (): void => {
     const lesson = produce(courseInfo, (draft: FullCourse) => {
@@ -29,6 +32,14 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
       // draft.sections[index].lessons.map((item, key) => (item.lessonTitle = `Lesson ${key}`));
     });
     setCourseInfo(lessons);
+  };
+
+  const setPreview = (): void => {
+    const preview = produce(courseInfo, (draft: FullCourse) => {
+      draft.content[index].lessons[lessonIndex].is_preview = !isPreview;
+    });
+    setCourseInfo(preview);
+    setIsPreview(!isPreview);
   };
 
   function openModal() {
@@ -54,7 +65,18 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
           )}
           <p className="py-1 ">{courseInfo.content[index].lessons[lessonIndex].title}</p>
         </div>
-        <div className="flex space-x-2">
+        <div className="flex items-center space-x-2">
+          <label className="text-xs cursor-pointer" htmlFor="preview">
+            Lesson preview
+          </label>
+          <input
+            type="checkbox"
+            id="preview"
+            checked={isPreview}
+            className="w-4 h-4 checkbox"
+            onChange={() => setPreview()}
+          />
+
           <AiOutlineEdit
             className="w-4 h-4 transition ease-in-out delay-150 cursor-pointer hover:scale-125 hover:text-blue-300"
             onClick={() => setEditToggle(!editToggle)}
