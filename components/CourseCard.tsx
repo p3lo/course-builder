@@ -9,10 +9,7 @@ const CourseCard: React.FC<{ course: FullCourse }> = ({ course }) => {
   return (
     <Link href={`/detail/${course.slug}`}>
       <a>
-        <div
-          className="relative space-y-1 h-[320px] cursor-pointer hover:shadow-md hover:shadow-gray-800 group"
-          onClick={() => router.push(`/detail/${course.slug}`)}
-        >
+        <div className="relative space-y-1 h-[320px] cursor-pointer hover:shadow-md hover:shadow-gray-800 group">
           <div className="h-40 overflow-hidden border border-gray-500 w-60 group-hover:opacity-50">
             <Image
               src={

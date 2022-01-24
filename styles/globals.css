@@ -9,6 +9,7 @@ body {
 
   --tw-bg-opacity: 1;
   background-color: rgb(55 65 81 / var(--tw-bg-opacity));
+  max-width: 100%;
 }
 
 #loadHTML ul,

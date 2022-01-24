@@ -1,14 +1,37 @@
-import { Lesson, Section } from '../../types';
+import { Lesson, Section, ToggleWithVideo } from '../../types';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { Disclosure } from '@headlessui/react';
+import { AiFillPlayCircle } from 'react-icons/ai';
+import { useRecoilState } from 'recoil';
+import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
+import produce from 'immer';
 
-const Panel: React.FC<{ lessons: Lesson[] }> = ({ lessons }) => (
-  <Disclosure.Panel className="px-4 py-2 space-y-2 text-sm text-gray-300">
-    {lessons.map((item, index) => (
-      <p key={item.title + index.toString()}>{item.title}</p>
-    ))}
-  </Disclosure.Panel>
-);
+const Panel: React.FC<{ lessons: Lesson[] }> = ({ lessons }) => {
+  const [videoModal, setVideoModal] = useRecoilState<ToggleWithVideo>(modalLessonVideoAtom);
+  function openModal(item: Lesson) {
+    const close = produce(videoModal, (draft) => {
+      draft.isOpen = true;
+      draft.url = item.content_url;
+      draft.title = item.title;
+    });
+    setVideoModal(close);
+  }
+  return (
+    <Disclosure.Panel className="px-4 py-2 space-y-2 text-sm text-gray-300">
+      {lessons.map((item, index) => (
+        <div key={item.title + index.toString()} className="flex items-center space-x-2">
+          <AiFillPlayCircle className="w-4 h-4" />
+          <p>{item.title}</p>
+          {item.is_preview && (
+            <button onClick={() => openModal(item)} className="text-blue-500 underline underline-offset-2">
+              ( Preview )
+            </button>
+          )}
+        </div>
+      ))}
+    </Disclosure.Panel>
+  );
+};
 
 const CourseContent: React.FC<{ course_content: Section[] }> = ({ course_content }) => {
   return (

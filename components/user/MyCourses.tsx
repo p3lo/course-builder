@@ -60,9 +60,9 @@ const MyCourses: React.FC<{ courses: FullCourse[] }> = ({ courses }) => {
           Create course
         </button>
       </div>
-      <div className="flex p-5 space-x-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 p-5 gap-5">
         {myCourses.map((item) => (
-          <div className="relative space-y-1" key={item.id}>
+          <div className="relative space-y-1 w-60" key={item.id}>
             <CourseCard course={item} />
             <div className="grid grid-cols-2 text-sm ">
               <Link href={`/builder/${item.slug}`}>
