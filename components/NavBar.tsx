@@ -5,18 +5,18 @@ import { AiOutlineShoppingCart } from 'react-icons/ai';
 import { IoMdNotificationsOutline } from 'react-icons/io';
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
-import Image from 'next/image';
-import { useRouter } from 'next/router';
-import { Session } from '@supabase/supabase-js';
 import Profile from './navbar/Profile';
-import { CategoryType, ProfileType } from '../types';
+import { CategoryType, FullCourse, ProfileType } from '../types';
 import Category from './navbar/Category';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import { categoriesAtom } from '../recoil/atoms/categoriesAtom';
 import { userProfileAtom } from '../recoil/atoms/userProfileAtom';
+import { cartAtom } from '../recoil/atoms/cartAtom';
+import Cart from './navbar/Cart';
 
 const NavBar: React.FC<{}> = () => {
   const [categories, setCategories] = useRecoilState<CategoryType[]>(categoriesAtom);
+  const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
   const [user, setUser] = useRecoilState<ProfileType>(userProfileAtom);
   const [session, setSession] = useState(null);
 
@@ -67,9 +67,7 @@ const NavBar: React.FC<{}> = () => {
         <Link href="#">
           <a className="hidden p-2 xl:inline-flex hover:text-white">Become teacher</a>
         </Link>
-        <div>
-          <AiOutlineShoppingCart className="w-5 h-5 transition duration-150 ease-out transform cursor-pointer hover:scale-125" />
-        </div>
+        <Cart />
         {user ? (
           <div className="flex items-center">
             <IoMdNotificationsOutline className="w-[22px] h-[22px] transition duration-150 ease-out transform cursor-pointer hover:scale-125 mr-5" />

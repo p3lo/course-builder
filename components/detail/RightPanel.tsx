@@ -12,8 +12,10 @@ import { AiOutlinePlayCircle } from 'react-icons/ai';
 import { useRecoilState } from 'recoil';
 import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
 import produce from 'immer';
+import { cartAtom } from '../../recoil/atoms/cartAtom';
 
 const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
+  const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
   const [videoModal, setVideoModal] = useRecoilState<ToggleWithVideo>(modalLessonVideoAtom);
   function openModal() {
     const close = produce(videoModal, (draft) => {
@@ -29,6 +31,11 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
       sum += content[len].lessons.length;
     }
     return sum;
+  };
+  const addToCart = () => {
+    if (!cart.some((incart) => incart.id === course.id)) {
+      setCart((prev) => [...prev, course]);
+    }
   };
   return (
     <div className="w-[340px] shadow-md bg-gray-600 sticky top-[80px] ">
@@ -52,11 +59,13 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
           {course.discount_price !== 0 && <h1 className="line-through ">${course.price}</h1>}
         </div>
         <div className="flex flex-col">
-          <Link href="#">
-            <a className="justify-center w-full py-3 font-bold text-center text-gray-700 bg-blue-300 border">
-              Add to cart
-            </a>
-          </Link>
+          <button
+            onClick={() => addToCart()}
+            className="justify-center w-full py-3 font-bold text-center text-gray-700 bg-blue-300 border"
+          >
+            Add to cart
+          </button>
+
           <Link href="#">
             <a className="justify-center w-full py-3 my-3 font-bold text-center border">Buy now</a>
           </Link>

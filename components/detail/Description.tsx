@@ -7,11 +7,6 @@ const Description: React.FC<{ course: FullCourse }> = ({ course }) => {
   const ref = useRef<HTMLInputElement>();
   const [lineClamp, setLineClamp] = useState(false);
 
-  const style = lineClamp ? { height: ref.current?.scrollHeight } : { height: 100 };
-  function createMarkup() {
-    return { __html: course.description };
-  }
-
   return (
     <div className="">
       <h1 className="pb-3 text-xl font-bold text-white">Description</h1>

@@ -34,14 +34,14 @@ const Home: React.FC<{ courses: FullCourse[]; authors: Author[] }> = ({ courses,
       <section className="">
         <Banner />
         <p className="p-5 text-xl font-bold">Our courses</p>
-        <div className="relative w-full flex p-5 space-x-5 text-gray-100">
+        <div className="relative flex w-full p-5 space-x-5 text-gray-100">
           {pulledCourses.map((item) => (
             <CourseCard key={item.id} course={item} />
           ))}
         </div>
         <p className="p-5 text-xl font-bold">Our instructors</p>
-        {authors.map((author) => (
-          <Instructors instructor={author} />
+        {authors.map((author, index) => (
+          <Instructors key={index} instructor={author} />
         ))}
       </section>
     </div>
