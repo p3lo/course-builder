@@ -6,6 +6,7 @@ import { cartAtom } from '../../recoil/atoms/cartAtom';
 import { AiOutlineShoppingCart } from 'react-icons/ai';
 import Link from 'next/link';
 import Image from 'next/image';
+import { sumPrice } from '../../lib/helpers';
 
 const Cart: React.FC<{}> = () => {
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
@@ -37,6 +38,10 @@ const Cart: React.FC<{}> = () => {
         </div>
       )}
 
+      <div className="flex justify-between items-center border-t border-gray-400">
+        <p className="mt-2">Summary:</p>
+        <p className="font-bold text-xl mt-2">{sumPrice(cart)}$</p>
+      </div>
       <div className="border-b border-gray-400" />
       <div className="flex justify-center w-full">
         <Link href="#">

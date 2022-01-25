@@ -18,7 +18,7 @@ const User: React.FC<{ courses: FullCourse[]; profile: ProfileType }> = ({ cours
   }, [profile]);
   return (
     <div className="relative w-full px-3 sm:px-5 md:px-14 xl:px-[100px] text-white bg-gray-700 h-full pb-5">
-      <Tab.Group>
+      <Tab.Group defaultIndex={1}>
         <Tab.List className="flex items-center justify-center space-x-1">
           <Tab
             className={({ selected }) =>

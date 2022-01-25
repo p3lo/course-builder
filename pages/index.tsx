@@ -33,13 +33,13 @@ const Home: React.FC<{ courses: FullCourse[]; authors: Author[] }> = ({ courses,
 
       <section className="">
         <Banner />
-        <p className="p-5 text-xl font-bold">Our courses</p>
-        <div className="relative flex w-full p-5 space-x-5 text-gray-100">
+        <p className="p-5 text-xl font-bold">Courses</p>
+        <div className="relative flex w-full px-5 pb-5 space-x-5 text-gray-100">
           {pulledCourses.map((item) => (
             <CourseCard key={item.id} course={item} />
           ))}
         </div>
-        <p className="p-5 text-xl font-bold">Our instructors</p>
+        <p className="p-5 text-xl font-bold bg-zinc-600 ">Instructors</p>
         {authors.map((author, index) => (
           <Instructors key={index} instructor={author} />
         ))}
