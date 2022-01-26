@@ -34,7 +34,10 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
   };
   const addToCart = () => {
     if (!cart.some((incart) => incart.id === course.id)) {
-      setCart((prev) => [...prev, course]);
+      const removeContent = produce(course, (draft) => {
+        draft.content = [];
+      });
+      setCart((prev) => [...prev, removeContent]);
     }
   };
   return (

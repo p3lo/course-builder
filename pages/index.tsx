@@ -40,8 +40,8 @@ const Home: React.FC<{ courses: FullCourse[]; authors: Author[] }> = ({ courses,
           ))}
         </div>
         <p className="p-5 text-xl font-bold bg-zinc-600 ">Instructors</p>
-        {authors.map((author, index) => (
-          <Instructors key={index} instructor={author} />
+        {authors.map((author) => (
+          <Instructors key={author.id} instructor={author} />
         ))}
       </section>
     </div>
@@ -54,10 +54,12 @@ export async function getServerSideProps({ req }) {
 
   const { data: courses } = await supabase
     .from('courses')
-    .select(`*, author(*), subcategory(name, main_category(name))`);
+    .select(
+      `id, title, slug, description, author(*), image, preview, price, discount_price, brief_description, language, updated_at, what_youll_learn, subcategory(name, main_category(name))`
+    );
   const { data: authors } = await supabase
     .from('profiles')
-    .select(`username, avatar_url, headline`)
+    .select(`id, username, avatar_url, headline`)
     .eq('role', 'teacher');
   // console.log(JSON.stringify(data[0], null, 2), error);
   // console.log(data);

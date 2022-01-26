@@ -7,9 +7,14 @@ import { AiOutlineShoppingCart } from 'react-icons/ai';
 import Link from 'next/link';
 import Image from 'next/image';
 import { sumPrice } from '../../lib/helpers';
+import { useRouter } from 'next/router';
 
 const Cart: React.FC<{}> = () => {
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
+  const router = useRouter();
+  const goToCart = () => {
+    router.push('/user/cart');
+  };
   const courses = (
     <div className="w-[250px] space-y-2 p-2">
       {cart.map((item, index) => (
@@ -38,18 +43,19 @@ const Cart: React.FC<{}> = () => {
         </div>
       )}
 
-      <div className="flex justify-between items-center border-t border-gray-400">
+      <div className="flex items-center justify-between border-t border-gray-400">
         <p className="mt-2">Summary:</p>
-        <p className="font-bold text-xl mt-2">{sumPrice(cart)}$</p>
+        <p className="mt-2 text-xl font-bold">{sumPrice(cart)}$</p>
       </div>
       <div className="border-b border-gray-400" />
       <div className="flex justify-center w-full">
-        <Link href="#">
+        <Link href="/user/cart">
           <a className="text-blue-400">Go to cart</a>
         </Link>
       </div>
     </div>
   );
+
   return (
     <div className="relative">
       {cart.length > 0 ? (
@@ -64,10 +70,11 @@ const Cart: React.FC<{}> = () => {
           maxWidth="100%"
         >
           <div className="relative">
-            <AiOutlineShoppingCart className="relative w-5 h-5 transition duration-150 ease-out transform cursor-pointer hover:scale-125" />
-            {cart.length > 0 && (
-              <span className="absolute z-10 text-[10px] font-bold text-red-300 -right-2 -top-3">{cart.length}</span>
-            )}
+            <AiOutlineShoppingCart
+              className="relative w-5 h-5 transition duration-150 ease-out transform cursor-pointer hover:scale-125"
+              onClick={goToCart}
+            />
+            <span className="absolute z-10 text-[10px] font-bold text-red-300 -right-2 -top-3">{cart.length}</span>
           </div>
         </Tippy>
       ) : (
