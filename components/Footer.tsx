@@ -1,6 +1,6 @@
 function Footer() {
   return (
-    <footer className="text-gray-100 bg-gray-500 border-t">
+    <footer className="text-gray-100 bg-gray-500 border-t ">
       <div className="flex items-center justify-between py-5 mx-20 border-b">
         <div>
           <p className="text-2xl font-extrabold">Teach the world online</p>

@@ -33,9 +33,12 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <RecoilRoot>
       <NextNProgress />
-      <NavBar />
-      <Component {...pageProps} />
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <NavBar />
+
+        <Component {...pageProps} />
+        <Footer />
+      </div>
       <ToastContainer autoClose={4000} limit={3} position="bottom-center" closeOnClick={true} theme="colored" />
     </RecoilRoot>
   );

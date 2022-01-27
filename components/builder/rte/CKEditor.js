@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
 
-function CKEditor({ onChange, editorLoaded, name, value, toolbar }) {
+function CKEditor({ onChange, name, value, toolbar }) {
   const editorRef = useRef();
   const { CKEditor, ClassicEditor } = editorRef.current || {};
   const [config, setConfig] = useState([]);
+  const [editorLoaded, setEditorLoaded] = useState(false);
 
   useEffect(() => {
     if (toolbar === 'profile') {
@@ -19,6 +20,7 @@ function CKEditor({ onChange, editorLoaded, name, value, toolbar }) {
       CKEditor: require('@ckeditor/ckeditor5-react').CKEditor, // v3+
       ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
     };
+    setEditorLoaded(true);
   }, []);
 
   // const config = {

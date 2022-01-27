@@ -17,7 +17,7 @@ const UserCart = () => {
     setCart(remove);
   };
   return (
-    <div className="flex flex-col items-center justify-center w-full text-gray-300">
+    <div className="flex flex-col items-center justify-center flex-grow w-full text-gray-300">
       <h1 className="flex py-10 text-4xl font-bold ">My cart</h1>
       {cart.length === 0 ? (
         <p className="py-[200px] flex justify-center ">Your cart is empty</p>

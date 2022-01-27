@@ -40,7 +40,6 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
     });
 
     if (courseInfo.id) {
-      console.log('🚀 ~ file: [slug].tsx ~ line 43 ~ saveData ~ courseInfo', courseInfo);
       const { data, error } = await supabase.from('courses').upsert({
         id: courseInfo.id,
         title: courseInfo.title,
@@ -60,7 +59,6 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
       });
       console.log(data, error);
     } else {
-      console.log('🚀 ~ file: [slug].tsx ~ line 43 ~ saveData ~ courseInfo', courseInfo, session.user.id);
       const { data, error } = await supabase.from('courses').upsert({
         title: courseInfo.title,
         slug: courseInfo.slug,
@@ -92,7 +90,7 @@ const Builder: React.FC<{ courses: FullCourse; categories: CategoryType[] }> = (
   };
 
   return (
-    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] h-full text-white bg-gray-700 pb-5">
+    <div className="w-full px-3 sm:px-5 md:px-14 xl:px-[100px] flex-grow text-white bg-gray-700 pb-5">
       <h1 className="py-3 mx-auto text-2xl font-bold text-center">{courseInfo.title}</h1>
       <div className="border-b border-gray-400" />
       <Tab.Group>

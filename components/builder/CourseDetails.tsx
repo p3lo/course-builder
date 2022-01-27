@@ -11,6 +11,7 @@ import WasabiUpload from './WasabiUpload';
 import { HiOutlineTrash } from 'react-icons/hi';
 import WhatYouLearn from './WhatYouLearn';
 import { v4 } from 'uuid';
+import _ from 'lodash';
 
 const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories }) => {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
@@ -28,9 +29,9 @@ const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories })
     );
     setCategoryIndex({ catIndex: mainCat, subcatIndex: subCat });
   }, []);
-  useEffect(() => {
-    setEditorLoadedDescription(true);
-  }, []);
+  // useEffect(() => {
+  //   _.debounce(setEditorLoadedDescription(true), 500);
+  // }, []);
   useEffect(() => {
     const descriptions = produce(courseInfo, (draft) => {
       draft.description = userDescription;
@@ -92,7 +93,6 @@ const CourseDetails: React.FC<{ categories: CategoryType[] }> = ({ categories })
           // value={description}
           toolbar="details"
           value={userDescription}
-          editorLoaded={editorLoadedDescription}
         />
       </div>
       <div className="flex flex-col">

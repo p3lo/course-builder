@@ -13,10 +13,12 @@ import { useRecoilState } from 'recoil';
 import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
 import produce from 'immer';
 import { cartAtom } from '../../recoil/atoms/cartAtom';
+import { useRouter } from 'next/router';
 
 const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
   const [videoModal, setVideoModal] = useRecoilState<ToggleWithVideo>(modalLessonVideoAtom);
+  const router = useRouter();
   function openModal() {
     const close = produce(videoModal, (draft) => {
       draft.isOpen = true;
@@ -68,10 +70,15 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
           >
             Add to cart
           </button>
-
-          <Link href="#">
-            <a className="justify-center w-full py-3 my-3 font-bold text-center border">Buy now</a>
-          </Link>
+          <button
+            onClick={() => {
+              addToCart();
+              router.push('/user/cart');
+            }}
+            className="justify-center w-full py-3 my-3 font-bold text-center border"
+          >
+            Buy now
+          </button>
         </div>
         <h1 className="pb-1 font-bold text-md">This course includes:</h1>
         <div className="pb-3 space-y-1 text-gray-300">

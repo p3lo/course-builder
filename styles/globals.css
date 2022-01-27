@@ -113,3 +113,7 @@ body {
 .tippy-box[data-theme~='dark'][data-placement^='right'] > .tippy-arrow::before {
   border-right-color: rgb(107 114 128);
 }
+
+.tippy-box[data-theme~='dark-course'] {
+  width: 300px;
+}

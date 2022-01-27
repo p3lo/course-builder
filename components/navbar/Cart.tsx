@@ -3,11 +3,12 @@ import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import { useRecoilState } from 'recoil';
 import { cartAtom } from '../../recoil/atoms/cartAtom';
-import { AiOutlineShoppingCart } from 'react-icons/ai';
+import { AiOutlineShoppingCart, AiOutlineClose } from 'react-icons/ai';
 import Link from 'next/link';
 import Image from 'next/image';
 import { sumPrice } from '../../lib/helpers';
 import { useRouter } from 'next/router';
+import produce from 'immer';
 
 const Cart: React.FC<{}> = () => {
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
@@ -15,15 +16,25 @@ const Cart: React.FC<{}> = () => {
   const goToCart = () => {
     router.push('/user/cart');
   };
+
+  const removeFromCart = (id: number) => {
+    const index = cart.findIndex((item) => item.id === id);
+    const remove = produce(cart, (draft) => {
+      draft.splice(index, 1);
+    });
+    setCart(remove);
+  };
   const courses = (
     <div className="w-[250px] space-y-2 p-2">
       {cart.map((item, index) => (
         <div key={item.id}>
           {index < 4 && (
-            <div className="flex space-x-1">
+            <div className="flex items-start space-x-1">
               <Image src={item.image} alt={item.title} width={40} height={40} objectFit="cover" layout="fixed" />
-              <div className="flex flex-col">
-                <p className="font-bold truncate ">{item.title}</p>
+              <div className="flex flex-col w-[170px] grow">
+                <Link href={`/detail/${item.slug}`}>
+                  <a className="font-bold truncate cursor-pointer hover:text-blue-400">{item.title}</a>
+                </Link>
                 <p className="text-gray-400 truncate text-2xs">{item.author.username}</p>
                 {item.price === 0 ? (
                   <p className="text-xs">Free</p>
@@ -33,11 +44,17 @@ const Cart: React.FC<{}> = () => {
                   <p className="text-xs">${item.price}</p>
                 )}
               </div>
+              <AiOutlineClose
+                onClick={() => {
+                  removeFromCart(item.id);
+                }}
+                className="w-4 h-4 cursor-pointer hover:text-red-400"
+              />
             </div>
           )}
         </div>
       ))}
-      {cart.length > 3 && (
+      {cart.length > 4 && (
         <div className="flex items-center justify-center">
           <p>...</p>
         </div>
