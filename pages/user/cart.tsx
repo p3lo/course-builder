@@ -1,13 +1,25 @@
 import produce from 'immer';
+import { iteratorSymbol } from 'immer/dist/internal';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRecoilState } from 'recoil';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useResetRecoilState } from 'recoil';
 import { sumPrice } from '../../lib/helpers';
+import { supabase } from '../../lib/supabaseClient';
 import { cartAtom } from '../../recoil/atoms/cartAtom';
 import { FullCourse } from '../../types';
 
 const UserCart = () => {
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
+  const [session, setSession] = useState(null);
+  const resetCart = useResetRecoilState(cartAtom);
+
+  useEffect(() => {
+    setSession(supabase.auth.session());
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   const removeFromCart = (id: number) => {
     const index = cart.findIndex((item) => item.id === id);
@@ -15,6 +27,17 @@ const UserCart = () => {
       draft.splice(index, 1);
     });
     setCart(remove);
+  };
+
+  const enrollCourse = () => {
+    cart.map(async (item) => {
+      const { data, error } = await supabase.from('enrolled_courses').upsert({
+        person: session.user.id,
+        course: item.id,
+      });
+      return data;
+    });
+    resetCart();
   };
   return (
     <div className="flex flex-col items-center justify-center flex-grow w-full text-gray-300">
@@ -59,7 +82,9 @@ const UserCart = () => {
               <p className="mt-2 text-xl font-bold">{sumPrice(cart)}$</p>
             </div>
             <div className="flex items-center justify-end space-x-3">
-              <button className="w-[150px] justify-end px-3 py-2 border">Payment</button>
+              <button className="w-[150px] justify-end px-3 py-2 border" onClick={enrollCourse}>
+                Payment
+              </button>
             </div>
           </div>
         </>

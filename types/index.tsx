@@ -82,3 +82,8 @@ export interface FullCourse extends CourseName {
   updated_at?: Date;
   content?: Section[];
 }
+
+export interface EnrolledCourse {
+  id?: number;
+  course?: FullCourse;
+}
