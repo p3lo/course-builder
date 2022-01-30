@@ -14,10 +14,12 @@ import { userProfileAtom } from '../recoil/atoms/userProfileAtom';
 import { cartAtom } from '../recoil/atoms/cartAtom';
 import Cart from './navbar/Cart';
 import { enrolledAtom } from '../recoil/atoms/enrolledAtom';
+import { Popover, Transition } from '@headlessui/react';
+import Search from './navbar/Search';
 
 const NavBar: React.FC<{}> = () => {
   const [categories, setCategories] = useRecoilState<CategoryType[]>(categoriesAtom);
-  const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
+  const [open, setOpen] = useState<boolean>(false);
   const [user, setUser] = useRecoilState<ProfileType>(userProfileAtom);
   const [enrolled, setEnrolled] = useRecoilState<any[]>(enrolledAtom);
   const [session, setSession] = useState(null);
@@ -62,16 +64,8 @@ const NavBar: React.FC<{}> = () => {
         <div className="h-5 border-r border-gray-300" />
         <Category categories={categories} />
       </div>
+      <Search />
 
-      <div className="flex items-center pl-3 pr-1 rounded-full md:border-2">
-        <input
-          type="text"
-          placeholder="Search..."
-          spellCheck="false"
-          className="w-full py-2 text-sm text-gray-200 placeholder-gray-300 bg-transparent outline-none active:border-none"
-        />
-        <HiSearch className="hidden p-1 text-white transition duration-150 ease-out transform bg-gray-700 rounded-full cursor-pointer w-7 h-7 md:inline-flex hover:scale-125" />
-      </div>
       <div className="flex items-center justify-end space-x-5 text-sm ">
         <Link href="#">
           <a className="hidden p-2 xl:inline-flex hover:text-white">Become teacher</a>
