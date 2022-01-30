@@ -6,6 +6,7 @@ import BuilderAccordionItem from './BuilderAccordionItem';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
 import VideoPreviewModal from './VideoPreviewModal';
+import { v4 } from 'uuid';
 
 function BuilderAccordion() {
   const [courseInfo, setCourseInfo] = useRecoilState(courseBuildAtom);
@@ -17,7 +18,7 @@ function BuilderAccordion() {
 
   const addSection = () => {
     const section = produce(courseInfo, (draft) => {
-      draft.content.push({ section: `Section ${draft.content.length}`, lessons: [{ title: 'Lesson' }] });
+      draft.content.push({ id: v4(), section: `Section ${draft.content.length}`, lessons: [{ title: 'Lesson' }] });
     });
     setCourseInfo(section);
   };

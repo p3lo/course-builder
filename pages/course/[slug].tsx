@@ -41,15 +41,23 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { data: course } = await supabase
     .from('courses')
     .select(`*, author(*), subcategory(id, main_category(id))`)
-    .match({ slug });
+    .match({ slug })
+    .single();
   if (course.length === 0) {
-    return {
-      props: {},
-    };
+    return { props: {}, redirect: { destination: '/login', permanent: false } };
+  }
+  const { data: own_course } = await supabase
+    .from('enrolled_courses')
+    .select(`*`)
+    .eq('person', user.id)
+    .eq('course', course.id)
+    .single();
+  if (!own_course) {
+    return { props: {}, redirect: { destination: '/', permanent: false } };
   }
   return {
     props: {
-      course: JSON.parse(JSON.stringify(course[0])),
+      course: JSON.parse(JSON.stringify(course)),
     },
   };
 };

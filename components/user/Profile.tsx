@@ -82,7 +82,6 @@ const Profile: React.FC<{}> = () => {
               }}
               // value={description}
               value={userDescription}
-              editorLoaded={editorLoadedDescription}
               toolbar="profile"
             />
             <label className="text-[10px] text-gray-400">Brief description about yourself</label>

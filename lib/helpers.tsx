@@ -12,3 +12,7 @@ export const sumPrice = (course: FullCourse[]) => {
   });
   return _.sum(prices);
 };
+
+export const arrContains = (enrolled: any[], id: number) => {
+  return _.some(enrolled, { course: id });
+};

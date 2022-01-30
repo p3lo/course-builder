@@ -44,6 +44,7 @@ export interface Subcategory {
 }
 
 export interface Lesson {
+  id?: string;
   title: string;
   description?: string;
   content_url?: string;
@@ -51,6 +52,7 @@ export interface Lesson {
 }
 
 export interface Section {
+  id?: string;
   section: string;
   lessons?: Lesson[];
 }

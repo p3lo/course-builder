@@ -11,6 +11,7 @@ import produce from 'immer';
 import BuilderAccordionPanelItem from './BuilderAccordionPanelItem';
 import { FullCourse } from '../../types';
 import { Draggable } from 'react-beautiful-dnd';
+import { v4 } from 'uuid';
 
 const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ index, open }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
@@ -34,7 +35,7 @@ const BuilderAccordionItem: React.FC<{ index: number; open: boolean }> = ({ inde
 
   const addLesson = (): void => {
     const lessons = produce(courseInfo, (draft: FullCourse) => {
-      draft.content[index].lessons.push({ title: `Lesson ${draft.content[index].lessons.length}` });
+      draft.content[index].lessons.push({ id: v4(), title: `Lesson ${draft.content[index].lessons.length}` });
     });
     setCourseInfo(lessons);
   };

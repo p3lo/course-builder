@@ -14,10 +14,13 @@ import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
 import produce from 'immer';
 import { cartAtom } from '../../recoil/atoms/cartAtom';
 import { useRouter } from 'next/router';
+import { enrolledAtom } from '../../recoil/atoms/enrolledAtom';
+import { arrContains } from '../../lib/helpers';
 
 const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
   const [videoModal, setVideoModal] = useRecoilState<ToggleWithVideo>(modalLessonVideoAtom);
+  const [enrolled, setEnrolled] = useRecoilState<any[]>(enrolledAtom);
   const router = useRouter();
   function openModal() {
     const close = produce(videoModal, (draft) => {
@@ -63,23 +66,33 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
           </h1>
           {course.discount_price !== 0 && <h1 className="line-through ">${course.price}</h1>}
         </div>
-        <div className="flex flex-col">
-          <button
-            onClick={() => addToCart()}
-            className="justify-center w-full py-3 font-bold text-center text-gray-700 bg-blue-300 border"
-          >
-            Add to cart
-          </button>
-          <button
-            onClick={() => {
-              addToCart();
-              router.push('/user/cart');
-            }}
-            className="justify-center w-full py-3 my-3 font-bold text-center border"
-          >
-            Buy now
-          </button>
-        </div>
+        {arrContains(enrolled, course.id) ? (
+          <div className="flex flex-col">
+            <Link href={`/course/${course.slug}`}>
+              <a className="justify-center w-full py-3 font-bold text-center text-gray-700 bg-blue-300 border">
+                Go to course
+              </a>
+            </Link>
+          </div>
+        ) : (
+          <div className="flex flex-col">
+            <button
+              onClick={() => addToCart()}
+              className="justify-center w-full py-3 font-bold text-center text-gray-700 bg-blue-300 border"
+            >
+              Add to cart
+            </button>
+            <button
+              onClick={() => {
+                addToCart();
+                router.push('/user/cart');
+              }}
+              className="justify-center w-full py-3 my-3 font-bold text-center border"
+            >
+              Buy now
+            </button>
+          </div>
+        )}
         <h1 className="pb-1 font-bold text-md">This course includes:</h1>
         <div className="pb-3 space-y-1 text-gray-300">
           <div className="flex space-x-3">

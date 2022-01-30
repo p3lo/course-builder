@@ -13,11 +13,13 @@ import { categoriesAtom } from '../recoil/atoms/categoriesAtom';
 import { userProfileAtom } from '../recoil/atoms/userProfileAtom';
 import { cartAtom } from '../recoil/atoms/cartAtom';
 import Cart from './navbar/Cart';
+import { enrolledAtom } from '../recoil/atoms/enrolledAtom';
 
 const NavBar: React.FC<{}> = () => {
   const [categories, setCategories] = useRecoilState<CategoryType[]>(categoriesAtom);
   const [cart, setCart] = useRecoilState<FullCourse[]>(cartAtom);
   const [user, setUser] = useRecoilState<ProfileType>(userProfileAtom);
+  const [enrolled, setEnrolled] = useRecoilState<any[]>(enrolledAtom);
   const [session, setSession] = useState(null);
 
   useEffect(() => {
@@ -27,19 +29,26 @@ const NavBar: React.FC<{}> = () => {
     });
   }, []);
   useEffect(() => {
+    supabase
+      .from('categories')
+      .select('id,name, subcategories!inner(id, name)')
+      .then((result) => {
+        setCategories(result.data);
+      });
     if (session) {
-      supabase
-        .from('categories')
-        .select('id,name, subcategories!inner(id, name)')
-        .then((result) => {
-          setCategories(result.data);
-        });
       supabase
         .from('profiles')
         .select('id, username, avatar_url, email')
         .eq('id', session.user.id)
         .then((result) => {
           setUser(result.data[0]);
+        });
+      supabase
+        .from('enrolled_courses')
+        .select(`course`)
+        .eq('person', session.user.id)
+        .then((result: any) => {
+          setEnrolled(result.data);
         });
     }
   }, [session]);
