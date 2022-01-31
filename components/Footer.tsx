@@ -7,17 +7,17 @@ function Footer() {
           <p className="text-md">Create an online video course, reach students across the globe, and earn money</p>
         </div>
         <div>
-          <a className="p-3 font-bold border border-gray-400 cursor-pointer">Teach on Udemy</a>
+          <a className="p-3 font-bold border border-gray-400 cursor-pointer">Teach on Coursemy</a>
         </div>
       </div>
       <div className="grid grid-cols-2 py-5 mx-20">
         <div className="grid grid-cols-3 text-xs">
           <div className="space-y-2 cursor-pointer">
             <div>
-              <a>Udemy Business</a>
+              <a>Coursemy Business</a>
             </div>
             <div>
-              <a>Teach on Udemy</a>
+              <a>Teach on Coursemy</a>
             </div>
             <div>
               <a>Get the app</a>

@@ -33,7 +33,7 @@ const Profile: React.FC<{ user_data: ProfileType }> = ({ user_data }) => {
         <Link href={`/user/${user_data.id}`}>My profile</Link>
         <div className="w-full border-t border-gray-200"></div>
         <Link href="#">My learning</Link>
-        <Link href="#">My cart</Link>
+        <Link href="/user/cart">My cart</Link>
         <Link href="#">Teach on Coursemy</Link>
         <div className="w-full border-t border-gray-200"></div>
         <Link href="#">Notifications</Link>

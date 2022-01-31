@@ -117,3 +117,14 @@ body {
 .tippy-box[data-theme~='dark-course'] {
   width: 300px;
 }
+
+.tippy-box[data-theme~='dark-search'] {
+  --tw-bg-opacity: 1;
+  --tw-text-opacity: 1;
+  /* background-color: rgb(107 114 128 / var(--tw-bg-opacity)); */
+
+  background-color: rgb(75 85 99 / var(--tw-bg-opacity));
+  color: rgb(243 244 246 / var(--tw-text-opacity));
+  border-width: 1px;
+  width: 100%;
+}

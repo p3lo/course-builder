@@ -4,17 +4,19 @@ import 'tippy.js/dist/tippy.css';
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
 import _ from 'lodash';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 const Search = () => {
-  const [searchInput, setSearchInput] = useState('');
+  const [searchInput, setSearchInput] = useState<string>('');
   const [searchResults, setSearchResults] = useState([]);
   const [tippy, setTippy] = useState(null);
 
-  console.log(searchResults);
+  const router = useRouter();
 
-  const searchInDb = async (searchData) => {
+  const searchInDb = async (searchData: string) => {
     const { data } = await supabase
       .from('courses')
-      .select('title, slug, author(username)')
+      .select('id, title, slug, author(username)')
       .textSearch('title', `${searchData}`, {
         type: 'websearch',
         config: 'english',
@@ -22,7 +24,7 @@ const Search = () => {
     setSearchResults(data);
   };
   const debounceLoadData = useCallback(
-    _.debounce((searchInput) => {
+    _.debounce((searchInput: string) => {
       searchInDb(searchInput);
     }, 300),
     []
@@ -39,11 +41,21 @@ const Search = () => {
   }, [searchInput]);
 
   const searchResult = (
-    <div className="">
+    <div className="w-[200px] sm:w-[300px] lg:w-[400px] flex flex-col space-y-1">
       {searchResults.length > 0 ? (
-        <p className="w-1/3">{JSON.stringify(searchResults, null, 2)}</p>
+        searchResults.map((item) => (
+          <Link key={item.id} href={`/detail/${item.slug}`}>
+            <a
+              className="flex flex-col justify-between w-full px-3 py-1 border border-gray-500 cursor-pointer group "
+              onClick={() => router.reload()}
+            >
+              <p className="group-hover:text-blue-300">{item.title}</p>
+              <p className="text-xs text-gray-400 ">{item.author.username}</p>
+            </a>
+          </Link>
+        ))
       ) : (
-        <p>No result found</p>
+        <p className="flex justify-center w-full p-3">No result found</p>
       )}
     </div>
   );
@@ -53,11 +65,11 @@ const Search = () => {
       animation="fade"
       interactive={true}
       arrow={false}
-      theme="dark"
+      theme="dark-search"
       placement="bottom-start"
       offset={[20, 10]}
-      maxWidth="100%"
       trigger="manual"
+      maxWidth="100%"
       onCreate={(instance) => setTippy(instance)}
     >
       <div className="flex items-center pl-3 pr-1 rounded-full md:border-2">
