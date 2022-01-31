@@ -43,6 +43,7 @@ const Profile: React.FC<{ user_data: ProfileType }> = ({ user_data }) => {
           onClick={() => {
             supabase.auth.signOut();
             router.push('/');
+            router.reload();
           }}
         >
           Log out
