@@ -10,10 +10,12 @@ import { useRecoilState } from 'recoil';
 import { FullCourse } from '../../types';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import produce from 'immer';
+import GetVideoTime from './GetVideoTime';
 
 const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> = ({ type, uppyId, path }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
-
+  const [getTime, setGetTime] = useState<boolean>(false);
+  console.log(courseInfo);
   const [option, setOption] = useState<string>(() => {
     if (uppyId !== 'details_image') {
       if (uppyId === 'details_video') {
@@ -80,10 +82,12 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
   useEffect(() => {
     let updateUrl: FullCourse = courseInfo;
     if (uppyId === 'details_image') {
+      setGetTime(false);
       updateUrl = produce(courseInfo, (draft) => {
         draft.image = url;
       });
     } else if (uppyId === 'details_video') {
+      setGetTime(false);
       updateUrl = produce(courseInfo, (draft) => {
         draft.preview = url;
       });
@@ -92,9 +96,11 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       updateUrl = produce(courseInfo, (draft) => {
         draft.content[+indexes[0]].lessons[+indexes[1]].content_url = url;
       });
+      setGetTime(false);
     }
     setCourseInfo(updateUrl);
   }, [url]);
+  console.log(getTime);
 
   useEffect(() => {
     if (option === 'cloud') {
@@ -105,7 +111,6 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       }
     }
   }, [option]);
-  console.log(url);
 
   const uppy = new Uppy({
     id: uppyId,
@@ -180,6 +185,11 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
           value={url}
           onChange={(e) => setUrl(e.target.value)}
         ></input>
+      )}
+      {getTime && (
+        <div className="hidden">
+          <GetVideoTime videoUrl={url} uppyId={uppyId} />
+        </div>
       )}
     </div>
   );

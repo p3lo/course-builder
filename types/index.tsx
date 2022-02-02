@@ -48,6 +48,7 @@ export interface Lesson {
   title: string;
   description?: string;
   content_url?: string;
+  video_duration?: number;
   is_preview?: boolean;
 }
 
