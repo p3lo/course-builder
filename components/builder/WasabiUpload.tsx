@@ -5,7 +5,7 @@ import Uppy from '@uppy/core';
 import '@uppy/core/dist/style.min.css';
 import '@uppy/file-input/dist/style.min.css';
 import '@uppy/status-bar/dist/style.min.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { FullCourse } from '../../types';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
@@ -13,6 +13,7 @@ import produce from 'immer';
 
 const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> = ({ type, uppyId, path }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);
+
   const [option, setOption] = useState<string>(() => {
     if (uppyId !== 'details_image') {
       if (uppyId === 'details_video') {
@@ -53,7 +54,11 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       return courseInfo.preview;
     } else {
       const indexes = uppyId.split('-');
-      return courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url;
+      if (courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url) {
+        return courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url;
+      } else {
+        return '';
+      }
     }
   });
   const [url, setUrl] = useState<string>(() => {
@@ -63,7 +68,12 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
       return courseInfo.preview;
     } else {
       const indexes = uppyId.split('-');
-      return courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url;
+
+      if (courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url) {
+        return courseInfo.content[+indexes[0]].lessons[+indexes[1]].content_url;
+      } else {
+        return '';
+      }
     }
   });
 
@@ -85,6 +95,17 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
     }
     setCourseInfo(updateUrl);
   }, [url]);
+
+  useEffect(() => {
+    if (option === 'cloud') {
+      !uploadComplete.includes('wasab') && setUploadComplete('');
+    } else {
+      if (url.includes('wasab')) {
+        setUrl('');
+      }
+    }
+  }, [option]);
+  console.log(url);
 
   const uppy = new Uppy({
     id: uppyId,
@@ -156,6 +177,8 @@ const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> =
           type="text"
           className="w-3/4 px-3 py-2 text-gray-800 bg-gray-100 border outline-none"
           placeholder="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
         ></input>
       )}
     </div>
