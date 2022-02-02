@@ -21,14 +21,7 @@ export const courseBuildAtom = atom({
     content: [
       {
         section: 'Introduction',
-        lessons: [
-          {
-            title: 'Lesson 1',
-            description: '',
-            content_url: '',
-            is_preview: false,
-          },
-        ],
+        lessons: [],
       },
     ],
   } as FullCourse,

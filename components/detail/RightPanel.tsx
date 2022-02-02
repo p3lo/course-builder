@@ -51,7 +51,7 @@ const RightPanel: React.FC<{ course: FullCourse }> = ({ course }) => {
         className="relative border border-gray-600 bg-gradient-to-t from-gray-900 cursor-pointer to-white w-[340px] h-[170px]"
         onClick={openModal}
       >
-        <Image src={course.image} alt="Course image" layout="fill" className="opacity-50" objectFit="contain" />
+        <Image src={course.image} alt="Course image" layout="fill" className="opacity-50" objectFit="cover" />
         <AiOutlinePlayCircle className="absolute justify-center w-12 h-12 top-[60px] left-[150px]  text-gray-600 rounded-full bg-gray-300" />
         <label className="absolute font-bold text-gray-300 bottom-2 left-[110px] cursor-pointer">Course preview</label>
       </div>

@@ -1,14 +1,28 @@
+import produce from 'immer';
 import { GetServerSideProps } from 'next';
-import { useState } from 'react';
-import VideoPlayer from '../../components/builder/VideoPlayer';
+import { useEffect, useState } from 'react';
+import { useRecoilState, useResetRecoilState } from 'recoil';
+import CourseList from '../../components/course/CourseList';
+import VideoPlayer from '../../components/course/VideoPlayer';
 import { supabase } from '../../lib/supabaseClient';
-import { FullCourse } from '../../types';
+import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
+import { CourseDetails, FullCourse, ToggleWithVideo } from '../../types';
 
 const LearnCourse: React.FC<{ course: FullCourse }> = ({ course }) => {
-  const [video, setVideo] = useState({
-    url: 'https://kamamoja-test.s3.eu-central-1.wasabisys.com/another/details/sample-30s.mp4',
-    title: '',
-  });
+  const [video, setVideo] = useRecoilState<CourseDetails>(courseDetailsAtom);
+  const resetList = useResetRecoilState(courseDetailsAtom);
+
+  useEffect(() => {
+    resetList();
+    const vid = produce(video, (draft) => {
+      draft.url = course.content[0].lessons[0].content_url;
+      draft.title = course.content[0].lessons[0].title;
+      draft.lessonId = course.content[0].lessons[0].id;
+      draft.sectionId = course.content[0].id;
+    });
+    setVideo(vid);
+  }, []);
+
   return (
     <div className="grid flex-grow grid-cols-4">
       <div className="flex flex-col col-span-3">
@@ -17,8 +31,10 @@ const LearnCourse: React.FC<{ course: FullCourse }> = ({ course }) => {
         </div>
       </div>
       <div className="flex flex-col">
-        <h1 className="px-2 py-2 border border-gray-500 text">{course.title}</h1>
-        <div className="min-h-screen overflow-y-scroll border-b border-l border-gray-500"></div>
+        <h1 className="px-2 py-2 text-gray-300 border border-gray-500">{course.title}</h1>
+        <div className="min-h-screen overflow-y-scroll border-b border-l border-gray-500 scrollbar-hide">
+          <CourseList course_content={course.content} />
+        </div>
       </div>
     </div>
   );

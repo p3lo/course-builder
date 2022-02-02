@@ -89,3 +89,16 @@ export interface EnrolledCourse {
   id?: number;
   course?: FullCourse;
 }
+
+export interface CourseDetails {
+  sectionId?: string;
+  lessonId?: string;
+  title: string;
+  url: string;
+  completed?: CompletedParts[];
+}
+
+export interface CompletedParts {
+  sectionId: string;
+  lessonId: string;
+}

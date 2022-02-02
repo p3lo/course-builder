@@ -66,14 +66,11 @@ const BuilderAccordionPanelItem: React.FC<{ index: number; lessonIndex: number }
           <p className="py-1 ">{courseInfo.content[index].lessons[lessonIndex].title}</p>
         </div>
         <div className="flex items-center space-x-2">
-          <label className="text-xs cursor-pointer" htmlFor="preview">
-            Lesson preview
-          </label>
+          <label className="text-xs ">Lesson preview</label>
           <input
             type="checkbox"
-            id="preview"
             checked={isPreview}
-            className="w-4 h-4 checkbox"
+            className="w-4 h-4 border-gray-300 checkbox"
             onChange={() => setPreview()}
           />
 

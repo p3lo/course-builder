@@ -20,7 +20,7 @@ const CourseCard: React.FC<{ course: FullCourse }> = ({ course }) => {
               alt={course.title}
               width={240}
               height={160}
-              objectFit="contain"
+              objectFit="cover"
             />
           </div>
           <div className="px-1 space-y-1">
