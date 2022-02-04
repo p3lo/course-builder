@@ -6,6 +6,8 @@ import { useRecoilState } from 'recoil';
 import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
 import produce from 'immer';
 import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
+import { toggleNextVideoAtom } from '../../recoil/atoms/toggleNextVideoAtom';
+import { useEffect } from 'react';
 
 const Panel: React.FC<{ lessons: Lesson[]; sectionId: string }> = ({ lessons, sectionId }) => {
   const [video, setVideo] = useRecoilState<CourseDetails>(courseDetailsAtom);

@@ -27,7 +27,7 @@ const LearnCourse: React.FC<{ course: FullCourse }> = ({ course }) => {
     <div className="grid flex-grow grid-cols-4">
       <div className="flex flex-col col-span-3">
         <div className="w-full h-3/4">
-          <VideoPlayer videoUrl={video.url} videoTitle={video.title} />
+          <VideoPlayer videoUrl={video.url} videoTitle={video.title} course_content={course.content} />
         </div>
       </div>
       <div className="flex flex-col">
