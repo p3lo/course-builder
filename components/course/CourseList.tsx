@@ -22,21 +22,25 @@ const Panel: React.FC<{ lessons: Lesson[]; sectionId: string }> = ({ lessons, se
   }
 
   return (
-    <Disclosure.Panel className="px-2 py-1 space-y-1 text-sm text-gray-300 ">
+    <Disclosure.Panel className="px-1 py-1 space-y-1 text-sm text-gray-300 ">
       {lessons.map((item, index) => (
-        <div
-          key={item.title + index.toString()}
-          className={`flex items-center p-1 space-x-2 border border-gray-500 ${
-            video.lessonId === item.id && 'bg-gray-300 text-gray-800'
-          }`}
-        >
-          <AiFillPlayCircle className="w-4 h-4" />
-          <a
-            className={`cursor-pointer ${video.lessonId === item.id ? 'hover:text-blue-700' : 'hover:text-blue-300'}`}
-            onClick={() => setVideoF(item)}
+        <div key={item.title + index.toString()} className="flex items-center space-x-1">
+          <input type="checkbox" className="checkbox checkbox-accent h-4 w-4" />
+          <div
+            className={`flex grow items-center p-1 space-x-2 border border-gray-500 ${
+              video.lessonId === item.id && 'bg-gray-300 text-gray-800'
+            }`}
           >
-            {item.title}
-          </a>
+            <AiFillPlayCircle className="w-4 h-4" />
+            <a
+              className={`cursor-pointer  ${
+                video.lessonId === item.id ? 'hover:text-blue-700' : 'hover:text-blue-300'
+              }`}
+              onClick={() => setVideoF(item)}
+            >
+              {item.title}
+            </a>
+          </div>
         </div>
       ))}
     </Disclosure.Panel>
