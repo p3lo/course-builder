@@ -20,6 +20,7 @@ export const courseBuildAtom = atom({
     },
     content: [
       {
+        id: 'this-is-first-section',
         section: 'Introduction',
         lessons: [],
       },

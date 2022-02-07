@@ -6,9 +6,11 @@ import CourseList from '../../components/course/CourseList';
 import VideoPlayer from '../../components/course/VideoPlayer';
 import { supabase } from '../../lib/supabaseClient';
 import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
-import { CourseDetails, FullCourse, ToggleWithVideo } from '../../types';
+import { enrolledAtom } from '../../recoil/atoms/enrolledAtom';
+import { enrolledCourseDetailsAtom } from '../../recoil/atoms/enrolledCourseDetailsAtom';
+import { CourseDetails, EnrolledCourse, FullCourse, ToggleWithVideo } from '../../types';
 
-const LearnCourse: React.FC<{ course: FullCourse }> = ({ course }) => {
+const LearnCourse: React.FC<{ course: FullCourse; own_course: EnrolledCourse }> = ({ course, own_course }) => {
   const [video, setVideo] = useRecoilState<CourseDetails>(courseDetailsAtom);
   const resetList = useResetRecoilState(courseDetailsAtom);
 
@@ -33,7 +35,7 @@ const LearnCourse: React.FC<{ course: FullCourse }> = ({ course }) => {
       <div className="flex flex-col">
         <h1 className="px-2 py-2 text-gray-300 border border-gray-500">{course.title}</h1>
         <div className="min-h-screen overflow-y-scroll border-b border-l border-gray-500 scrollbar-hide">
-          <CourseList course_content={course.content} />
+          <CourseList course_content={course.content} own_course={own_course} />
         </div>
       </div>
     </div>
@@ -62,6 +64,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (course.length === 0) {
     return { props: {}, redirect: { destination: '/login', permanent: false } };
   }
+
   const { data: own_course } = await supabase
     .from('enrolled_courses')
     .select(`*`)
@@ -74,6 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       course: JSON.parse(JSON.stringify(course)),
+      own_course: JSON.parse(JSON.stringify(own_course)),
     },
   };
 };

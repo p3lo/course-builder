@@ -42,8 +42,8 @@ const Profile: React.FC<{ user_data: ProfileType }> = ({ user_data }) => {
           className="tracking-wider"
           onClick={() => {
             supabase.auth.signOut();
+
             router.push('/');
-            router.reload();
           }}
         >
           Log out

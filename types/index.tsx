@@ -88,7 +88,9 @@ export interface FullCourse extends CourseName {
 
 export interface EnrolledCourse {
   id?: number;
+  person?: ProfileType;
   course?: FullCourse;
+  completed?: string[];
 }
 
 export interface CourseDetails {

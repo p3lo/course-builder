@@ -1,5 +1,5 @@
 import { Disclosure } from '@headlessui/react';
-import { CourseDetails, FullCourse, Lesson, Section, ToggleWithVideo } from '../../types';
+import { CourseDetails, EnrolledCourse, FullCourse, Lesson, Section, ToggleWithVideo } from '../../types';
 import { HiChevronDown, HiChevronUp } from 'react-icons/hi';
 import { AiFillPlayCircle } from 'react-icons/ai';
 import { useRecoilState } from 'recoil';
@@ -7,10 +7,21 @@ import { modalLessonVideoAtom } from '../../recoil/atoms/modalsAtom';
 import produce from 'immer';
 import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
 import { toggleNextVideoAtom } from '../../recoil/atoms/toggleNextVideoAtom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import IsCompletedCheckbox from './IsCompletedCheckbox';
+import { enrolledCourseDetailsAtom } from '../../recoil/atoms/enrolledCourseDetailsAtom';
 
-const Panel: React.FC<{ lessons: Lesson[]; sectionId: string }> = ({ lessons, sectionId }) => {
+const Panel: React.FC<{ lessons: Lesson[]; sectionId: string; own_course: EnrolledCourse }> = ({
+  lessons,
+  sectionId,
+  own_course,
+}) => {
   const [video, setVideo] = useRecoilState<CourseDetails>(courseDetailsAtom);
+  const [enrolledCourse, setEnrolledCourse] = useRecoilState<EnrolledCourse>(enrolledCourseDetailsAtom);
+  useEffect(() => {
+    setEnrolledCourse(own_course);
+  }, []);
+
   function setVideoF(item: Lesson) {
     const vid = produce(video, (draft) => {
       draft.url = item.content_url;
@@ -25,7 +36,7 @@ const Panel: React.FC<{ lessons: Lesson[]; sectionId: string }> = ({ lessons, se
     <Disclosure.Panel className="px-1 py-1 space-y-1 text-sm text-gray-300 ">
       {lessons.map((item, index) => (
         <div key={item.title + index.toString()} className="flex items-center space-x-1">
-          <input type="checkbox" className="checkbox checkbox-accent h-4 w-4" />
+          <IsCompletedCheckbox thisLesson={`${sectionId}-${item.id}`} />
           <div
             className={`flex grow items-center p-1 space-x-2 border border-gray-500 ${
               video.lessonId === item.id && 'bg-gray-300 text-gray-800'
@@ -47,7 +58,10 @@ const Panel: React.FC<{ lessons: Lesson[]; sectionId: string }> = ({ lessons, se
   );
 };
 
-const CourseList: React.FC<{ course_content: Section[] }> = ({ course_content }) => {
+const CourseList: React.FC<{ course_content: Section[]; own_course: EnrolledCourse }> = ({
+  course_content,
+  own_course,
+}) => {
   return (
     <div className="w-full">
       {course_content.map((item, index) => (
@@ -58,7 +72,7 @@ const CourseList: React.FC<{ course_content: Section[] }> = ({ course_content })
                 <span>{item.section}</span>
                 <HiChevronDown className={`${open ? 'transform rotate-180' : ''} w-5 h-5 text-gray-300`} />
               </Disclosure.Button>
-              <Panel lessons={item.lessons} sectionId={item.id} />
+              <Panel lessons={item.lessons} sectionId={item.id} own_course={own_course} />
             </>
           )}
         </Disclosure>
