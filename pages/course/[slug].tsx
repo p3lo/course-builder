@@ -3,6 +3,7 @@ import { GetServerSideProps } from 'next';
 import { useEffect, useState } from 'react';
 import { useRecoilState, useResetRecoilState } from 'recoil';
 import CourseList from '../../components/course/CourseList';
+import Details from '../../components/course/Details';
 import VideoPlayer from '../../components/course/VideoPlayer';
 import { supabase } from '../../lib/supabaseClient';
 import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
@@ -27,9 +28,12 @@ const LearnCourse: React.FC<{ course: FullCourse; own_course: EnrolledCourse }> 
 
   return (
     <div className="grid flex-grow grid-cols-4">
-      <div className="flex flex-col col-span-3">
-        <div className="w-full h-3/4">
+      <div className="flex flex-col col-span-3 space-y-5">
+        <div className="w-full ">
           <VideoPlayer videoUrl={video.url} videoTitle={video.title} course_content={course.content} />
+        </div>
+        <div>
+          <Details />
         </div>
       </div>
       <div className="flex flex-col">
