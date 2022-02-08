@@ -21,6 +21,15 @@ const Panel: React.FC<{ lessons: Lesson[]; sectionId: string; own_course: Enroll
   useEffect(() => {
     setEnrolledCourse(own_course);
   }, []);
+  // useEffect(() => {
+  //   if (!enrolledCourse.completed?.includes(video.completed_lesson)) {
+  //     const add_to_completed = produce(enrolledCourse, (draft) => {
+  //       draft.completed.push(video.completed_lesson);
+  //     });
+
+  //     console.log(video.completed_lesson, enrolledCourse.completed);
+  //   }
+  // }, [video.completed_lesson]);
 
   function setVideoF(item: Lesson) {
     const vid = produce(video, (draft) => {

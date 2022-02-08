@@ -90,6 +90,7 @@ export interface EnrolledCourse {
   id?: number;
   person?: ProfileType;
   course?: FullCourse;
+
   completed?: string[];
 }
 
@@ -98,6 +99,7 @@ export interface CourseDetails {
   lessonId?: string;
   title: string;
   url: string;
+  completed_lesson?: string;
   completed?: CompletedParts[];
 }
 

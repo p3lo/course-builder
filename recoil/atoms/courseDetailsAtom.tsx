@@ -8,5 +8,6 @@ export const courseDetailsAtom = atom({
     lessonId: '',
     title: '',
     url: '',
+    completed_lesson: '',
   } as CourseDetails,
 });

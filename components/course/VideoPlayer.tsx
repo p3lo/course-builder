@@ -2,9 +2,10 @@ import produce from 'immer';
 import Plyr, { APITypes } from 'plyr-react';
 import 'plyr-react/dist/plyr.css';
 import { useCallback, useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
+import { selector, useRecoilState, useSetRecoilState } from 'recoil';
 import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
-import { CourseDetails, Section } from '../../types';
+import { enrolledCourseDetailsAtom } from '../../recoil/atoms/enrolledCourseDetailsAtom';
+import { CourseDetails, EnrolledCourse, Section } from '../../types';
 
 const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string; course_content: Section[] }> = ({
   videoUrl,
@@ -20,6 +21,7 @@ const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string; course_conte
       },
     ],
   });
+
   const [video, setVideo] = useRecoilState<CourseDetails>(courseDetailsAtom);
   const player = useCallback(
     (node) => {
@@ -51,6 +53,7 @@ const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string; course_conte
         draft.title = course_content[getSectionIndex].lessons[getLessonIndex + 1].title;
         draft.lessonId = course_content[getSectionIndex].lessons[getLessonIndex + 1].id;
         draft.sectionId = course_content[getSectionIndex].id;
+        draft.completed_lesson = `${video.sectionId}-${video.lessonId}`;
       });
       setVideo(vid);
     } else {
@@ -60,6 +63,7 @@ const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string; course_conte
           draft.title = course_content[getSectionIndex + 1].lessons[0].title;
           draft.lessonId = course_content[getSectionIndex + 1].lessons[0].id;
           draft.sectionId = course_content[getSectionIndex + 1].id;
+          draft.completed_lesson = `${video.sectionId}-${video.lessonId}`;
         });
         setVideo(vid);
       } else {
@@ -69,6 +73,7 @@ const VideoPlayer: React.FC<{ videoUrl: string; videoTitle: string; course_conte
           draft.title = course_content[0].lessons[0].title;
           draft.lessonId = course_content[0].lessons[0].id;
           draft.sectionId = course_content[0].id;
+          draft.completed_lesson = `${video.sectionId}-${video.lessonId}`;
         });
         setVideo(vid);
       }
