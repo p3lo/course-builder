@@ -1,4 +1,5 @@
 import { Tab } from '@headlessui/react';
+import QA from './QA';
 
 const Details = () => {
   return (
@@ -26,7 +27,9 @@ const Details = () => {
         </Tab.List>
         <Tab.Panels className="mt-5">
           <Tab.Panel className="outline-none">{/* Course Details */}</Tab.Panel>
-          <Tab.Panel className="outline-none">{/* QA */}</Tab.Panel>
+          <Tab.Panel className="outline-none">
+            <QA />
+          </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>
     </div>

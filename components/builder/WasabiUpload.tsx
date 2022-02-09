@@ -10,7 +10,6 @@ import { useRecoilState } from 'recoil';
 import { FullCourse } from '../../types';
 import { courseBuildAtom } from '../../recoil/atoms/courseBuildAtom';
 import produce from 'immer';
-import { ToggleTime, toggleTimeAtom } from '../../recoil/atoms/toggleTimeAtom';
 
 const WasabiUpload: React.FC<{ type: string[]; uppyId: string; path: string }> = ({ type, uppyId, path }) => {
   const [courseInfo, setCourseInfo] = useRecoilState<FullCourse>(courseBuildAtom);

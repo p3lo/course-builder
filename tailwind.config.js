@@ -3,10 +3,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [
-    require('daisyui'),
-    require('@tailwindcss/line-clamp'),
-    require('tailwind-scrollbar-hide'),
-    require('@tailwindcss/typography'),
-  ],
+  plugins: [require('daisyui'), require('@tailwindcss/line-clamp'), require('tailwind-scrollbar-hide')],
 };

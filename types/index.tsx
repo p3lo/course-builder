@@ -84,6 +84,22 @@ export interface FullCourse extends CourseName {
   discount_price?: number;
   updated_at?: Date;
   content?: Section[];
+  comments_questions?: CommentsQuestions[];
+}
+
+export interface CommentsQuestions {
+  id: number;
+  created_at?: string;
+  question?: string;
+  author?: Author;
+  comments_answers?: CommentsAnswers[];
+}
+
+export interface CommentsAnswers {
+  id: number;
+  created_at?: string;
+  answer?: string;
+  author?: Author;
 }
 
 export interface EnrolledCourse {
