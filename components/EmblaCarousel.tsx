@@ -47,12 +47,14 @@ export const EmblaCarousel: React.FC<{ course: FullCourse[] }> = ({ course }) =>
   const tippyContent = (item: FullCourse) => (
     <div className="space-y-1 ">
       <p className="text-xl font-bold">{item.title}</p>
-      {item.what_youll_learn.map((wyl) => (
-        <div key={wyl.id} className="flex items-start space-x-1">
-          <HiOutlineCheck className="w-5 h-4" />
-          <p className="text-xs">{wyl.title}</p>
-        </div>
-      ))}
+      {item.what_youll_learn.map(
+        (wyl, index) =>
+          index < 3 && (
+            <div key={wyl.id} className="flex items-start space-x-1">
+              <p className="text-xs first-letter:font-extrabold first-letter:float-left">{wyl.title}</p>
+            </div>
+          )
+      )}
       <div className="flex items-center justify-center pt-3 pb-2">
         {arrContains(enrolled, item.id) ? (
           <Link href={`/course/${item.slug}`}>
@@ -72,7 +74,7 @@ export const EmblaCarousel: React.FC<{ course: FullCourse[] }> = ({ course }) =>
       <div className="embla" ref={emblaRef}>
         <div className="embla__container">
           {course.map((item) => (
-            <div key={item.title} className="embla__slide">
+            <div key={item.title} className=" embla__slide">
               <Tippy
                 content={tippyContent(item)}
                 animation="fade"
