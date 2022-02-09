@@ -16,6 +16,7 @@ import produce from 'immer';
 import { arrContains } from '../lib/helpers';
 import Link from 'next/link';
 import { enrolledAtom } from '../recoil/atoms/enrolledAtom';
+import { EmblaCarousel } from '../components/EmblaCarousel';
 
 const Home: React.FC<{ courses: FullCourse[]; authors: Author[] }> = ({ courses, authors }) => {
   const [pulledCourses, setPulledCourses] = useState<FullCourse[]>(courses);
@@ -76,7 +77,10 @@ const Home: React.FC<{ courses: FullCourse[]; authors: Author[] }> = ({ courses,
       <section className="">
         <Banner />
         <p className="p-5 text-xl font-bold">Courses</p>
-        <div className="relative flex w-full px-5 pb-5 space-x-5 text-gray-100">
+        <div className="p-3">
+          <EmblaCarousel course={courses} />
+        </div>
+        {/* <div className="relative flex w-full px-5 pb-5 space-x-5 text-gray-100">
           {pulledCourses.map((item) => (
             <div key={item.id}>
               <Tippy
@@ -94,7 +98,7 @@ const Home: React.FC<{ courses: FullCourse[]; authors: Author[] }> = ({ courses,
               </Tippy>
             </div>
           ))}
-        </div>
+        </div> */}
         <p className="p-5 text-xl font-bold bg-zinc-600 ">Instructors</p>
         {authors.map((author) => (
           <Instructors key={author.id} instructor={author} />

@@ -22,6 +22,7 @@
     "@uppy/react": "^2.1.2",
     "axios": "^0.24.0",
     "daisyui": "^1.24.3",
+    "embla-carousel-react": "^6.2.0",
     "html-react-parser": "^1.4.5",
     "immer": "^9.0.7",
     "intercept-stdout": "^0.1.2",
