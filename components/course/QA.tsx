@@ -10,6 +10,7 @@ export const Answers: React.FC<{ question_id: number }> = ({ question_id }) => {
   const [qa, setQa] = useState<CommentsAnswers[]>();
   const [session, setSession] = useState(null);
   const answerText = useRef<HTMLTextAreaElement>();
+  const [newA, setNewA] = useState(false);
 
   useEffect(() => {
     setSession(supabase.auth.session());
@@ -36,6 +37,7 @@ export const Answers: React.FC<{ question_id: number }> = ({ question_id }) => {
           .then(({ data }) => setQa(data));
       });
     answerText.current.value = '';
+    setNewA(false);
   };
 
   return (
@@ -52,23 +54,33 @@ export const Answers: React.FC<{ question_id: number }> = ({ question_id }) => {
                 objectFit="scale-down"
               />
             </div>
-            <div className="flex w-3/4 p-2 space-x-1 text-gray-300 border-b border-gray-400 rounded-xl">
+
+            <div className="flex w-3/4 p-2 space-x-1 text-gray-300 bg-gray-600 border-l-2 border-r-2 border-gray-400 rounded-xl">
               <p className="text-sm">{item.answer}</p>
             </div>
           </div>
         </div>
       ))}
       <div className="w-full ">
-        <div className="flex flex-col items-end justify-end w-full space-y-1">
-          <textarea
-            ref={answerText}
-            className="justify-end w-3/4 h-14 textarea textarea-bordered"
-            placeholder="Answer"
-          ></textarea>
-          <button onClick={addAnswer} className="btn btn-sm">
-            Post
-          </button>
-        </div>
+        {!newA ? (
+          <p
+            className="flex items-center justify-center text-xs font-bold text-blue-400 cursor-pointer"
+            onClick={() => setNewA(true)}
+          >
+            Reply
+          </p>
+        ) : (
+          <div className="flex flex-col items-end justify-end w-full space-y-1">
+            <textarea
+              ref={answerText}
+              className="justify-end w-3/4 h-14 textarea textarea-bordered"
+              placeholder="Answer"
+            />
+            <button onClick={addAnswer} className="normal-case btn btn-sm">
+              Post
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -78,6 +90,7 @@ const QA: React.FC<{ course_id: number }> = ({ course_id }) => {
   const [qa, setQa] = useState<CommentsQuestions[]>();
   const questionText = useRef<HTMLTextAreaElement>();
   const [session, setSession] = useState(null);
+  const [newQ, setNewQ] = useState(false);
 
   useEffect(() => {
     setSession(supabase.auth.session());
@@ -105,23 +118,26 @@ const QA: React.FC<{ course_id: number }> = ({ course_id }) => {
           .then(({ data }) => setQa(data));
       });
     questionText.current.value = '';
+    setNewQ(false);
   };
 
   return (
     <div className="flex flex-col pb-5 space-y-2">
-      <div className="w-full ">
-        <label className="label">
-          <span className="text-xs label-text text-gray-300">New question</span>
-        </label>
-        <textarea
-          ref={questionText}
-          className="w-full h-14 textarea textarea-bordered"
-          placeholder="Question"
-        ></textarea>
-        <button className="btn btn-sm" onClick={addQuestion}>
-          Post
+      {!newQ ? (
+        <button className="btn btn-sm w-[250px] normal-case" onClick={() => setNewQ(true)}>
+          New Question
         </button>
-      </div>
+      ) : (
+        <div className="w-full ">
+          <label className="label">
+            <span className="text-xs text-gray-300 label-text">New question</span>
+          </label>
+          <textarea ref={questionText} className="w-full h-14 textarea textarea-bordered" placeholder="Question" />
+          <button className="normal-case btn btn-sm" onClick={addQuestion}>
+            Post
+          </button>
+        </div>
+      )}
       <div className="border-b" />
       <div className="flex flex-col">
         <div className="flex flex-col space-y-2">
@@ -137,7 +153,7 @@ const QA: React.FC<{ course_id: number }> = ({ course_id }) => {
                     objectFit="scale-down"
                   />
                 </div>
-                <div className="flex w-3/4 p-2 space-x-1 text-sm border-b border-gray-400 rounded-xl text-gray-300">
+                <div className="flex w-3/4 p-2 space-x-1 text-sm text-gray-300 border-b border-gray-400 rounded-xl">
                   <span className="font-extrabold">Question: </span>
                   <p className="">{item.question}</p>
                 </div>
