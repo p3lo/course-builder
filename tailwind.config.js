@@ -4,4 +4,10 @@ module.exports = {
     extend: {},
   },
   plugins: [require('daisyui'), require('@tailwindcss/line-clamp'), require('tailwind-scrollbar-hide')],
+  daisyui: {
+    themes: [
+      // first one will be the default theme
+      'dark',
+    ],
+  },
 };

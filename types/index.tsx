@@ -88,7 +88,7 @@ export interface FullCourse extends CourseName {
 }
 
 export interface CommentsQuestions {
-  id: number;
+  id?: number;
   created_at?: string;
   question?: string;
   author?: Author;
@@ -96,7 +96,7 @@ export interface CommentsQuestions {
 }
 
 export interface CommentsAnswers {
-  id: number;
+  id?: number;
   created_at?: string;
   answer?: string;
   author?: Author;

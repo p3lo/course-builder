@@ -1,7 +1,7 @@
 import { Tab } from '@headlessui/react';
 import QA from './QA';
 
-const Details = () => {
+const Details: React.FC<{ course_id: number }> = ({ course_id }) => {
   return (
     <div className="px-5">
       <Tab.Group>
@@ -28,7 +28,7 @@ const Details = () => {
         <Tab.Panels className="mt-5">
           <Tab.Panel className="outline-none">{/* Course Details */}</Tab.Panel>
           <Tab.Panel className="outline-none">
-            <QA />
+            <QA course_id={course_id} />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

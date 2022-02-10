@@ -36,7 +36,7 @@ const LearnCourse: React.FC<{ course: FullCourse; own_course: EnrolledCourse }> 
           <VideoPlayer videoUrl={video.url} videoTitle={video.title} course_content={course.content} />
         </div>
         <div>
-          <Details />
+          <Details course_id={course.id} />
         </div>
       </div>
       <div className="flex flex-col">
