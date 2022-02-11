@@ -20,6 +20,7 @@ function CKEditor({ onChange, name, value, toolbar }) {
       CKEditor: require('@ckeditor/ckeditor5-react').CKEditor, // v3+
       ClassicEditor: require('@ckeditor/ckeditor5-build-classic'),
     };
+
     setEditorLoaded(true);
   }, []);
 

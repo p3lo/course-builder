@@ -12,11 +12,11 @@ const DetailsTab: React.FC<{ course: FullCourse }> = ({ course }) => {
   return (
     <div className="pb-5">
       <div className="flex flex-col space-y-2">
-        <h2 className="text-xl font-bold">Description</h2>
+        <h2 className="pl-3 text-xl font-bold">Description</h2>
         <div dangerouslySetInnerHTML={description()} />
       </div>
       <div className="flex flex-col space-y-2">
-        <h2 className="text-xl font-bold">Author</h2>
+        <h2 className="pl-3 text-xl font-bold">Author</h2>
         <div className="">
           <div className="flex flex-col space-y-1 items-center float-left pr-5 pb-5">
             <div className="w-[100px] h-[100px] border rounded-full overflow-hidden ">
