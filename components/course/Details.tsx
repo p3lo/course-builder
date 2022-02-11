@@ -1,7 +1,9 @@
 import { Tab } from '@headlessui/react';
+import { FullCourse } from '../../types';
+import DetailsTab from './DetailsTab';
 import QA from './QA';
 
-const Details: React.FC<{ course_id: number }> = ({ course_id }) => {
+const Details: React.FC<{ course: FullCourse }> = ({ course }) => {
   return (
     <div className="px-5">
       <Tab.Group>
@@ -26,9 +28,11 @@ const Details: React.FC<{ course_id: number }> = ({ course_id }) => {
           </Tab>
         </Tab.List>
         <Tab.Panels className="mt-5">
-          <Tab.Panel className="outline-none">{/* Course Details */}</Tab.Panel>
           <Tab.Panel className="outline-none">
-            <QA course_id={course_id} />
+            <DetailsTab course={course} />
+          </Tab.Panel>
+          <Tab.Panel className="outline-none">
+            <QA course_id={course.id} />
           </Tab.Panel>
         </Tab.Panels>
       </Tab.Group>

@@ -7,8 +7,6 @@ import Details from '../../components/course/Details';
 import VideoPlayer from '../../components/course/VideoPlayer';
 import { supabase } from '../../lib/supabaseClient';
 import { courseDetailsAtom } from '../../recoil/atoms/courseDetailsAtom';
-import { enrolledAtom } from '../../recoil/atoms/enrolledAtom';
-import { enrolledCourseDetailsAtom } from '../../recoil/atoms/enrolledCourseDetailsAtom';
 import { enrolledCourseQAAtom } from '../../recoil/atoms/enrolledCourseQAAtom';
 import { CommentsQuestions, CourseDetails, EnrolledCourse, FullCourse, ToggleWithVideo } from '../../types';
 
@@ -36,7 +34,7 @@ const LearnCourse: React.FC<{ course: FullCourse; own_course: EnrolledCourse }> 
           <VideoPlayer videoUrl={video.url} videoTitle={video.title} course_content={course.content} />
         </div>
         <div>
-          <Details course_id={course.id} />
+          <Details course={course} />
         </div>
       </div>
       <div className="flex flex-col">
